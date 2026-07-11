@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Available Routes | Ghana Trotro Transit</title>
+  <meta name="description" content="Browse all available trotro and taxi routes in Ghana's transportation network." />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="shortcut icon" href="assets/icon.png" type="image/x-icon">
+  
+  <!-- Supabase JS Client Library -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Supabase project keys + client init (drop-in config) -->
+  <script src="things/supabase.js"></script>
+
+  <style>
+    :root {
+      --primary: #5a189a;
+      --primary-light: #7b2cbf;
+      --secondary: #ff9e00;
+      --secondary-light: #ffb74d;
+      --accent: #00bbf9;
+      --bg: #f8f9fa;
+      --card-bg: #ffffff;
+      --text-dark: #212529;
+      --text-medium: #495057;
+      --text-light: #6c757d;
+      --text-white: #ffffff;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      --shadow-hover: 0 15px 40px rgba(0, 0, 0, 0.12);
+      --radius: 16px;
+      --transition: all 0.3s ease;
+      --table-header: #6b21a8;
+      --table-row-even: #faf7ff;
+      --table-row-hover: #f0e6ff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, sans-serif;
+      background: var(--bg);
+      color: var(--text-dark);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* Header & Navigation */
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: var(--text-white);
+      position: relative;
+      overflow: hidden;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 0;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding-left: 20px;
+      padding-right: 20px;
+      position: relative;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-icon {
+      color: var(--secondary);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: rgba(255, 255, 255, 0.9);
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+
+    .nav-links a:hover {
+      color: var(--secondary);
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 5rem 1.5rem;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.8rem, 7vw, 4.5rem);
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+      line-height: 1.1;
+    }
+
+    .hero p {
+      max-width: 800px;
+      margin: 0 auto 2.5rem;
+      font-size: 1.2rem;
+      opacity: 0.95;
+    }
+
+    .hero-btns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+
+    /* Sections */
+    section {
+      padding: 5rem 0;
+    }
+
+    .section-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      text-align: center;
+      color: var(--primary);
+    }
+
+    .section-subtitle {
+      font-size: 1.1rem;
+      color: var(--text-medium);
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto 3rem;
+    }
+
+    /* Routes Table */
+    .routes-table-container {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      margin-top: 2rem;
+    }
+
+    .table-header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: white;
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .table-header h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .table-controls {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .search-box {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-box input {
+      padding: 0.8rem 1rem 0.8rem 3rem;
+      border-radius: 50px;
+      border: none;
+      width: 300px;
+      font-size: 1rem;
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
+      transition: var(--transition);
+    }
+
+    .search-box input::placeholder {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .search-box input:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.25);
+      width: 350px;
+    }
+
+    .search-box i {
+      position: absolute;
+      left: 1rem;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .filter-btn {
+      background: rgba(255, 255, 255, 0.15);
+      border: none;
+      color: white;
+      padding: 0.8rem 1.5rem;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: var(--transition);
+    }
+
+    .filter-btn:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .routes-table-wrapper {
+      overflow-x: auto;
+    }
+
+    .routes-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 800px;
+    }
+
+    .routes-table thead {
+      background: var(--table-header);
+    }
+
+    .routes-table th {
+      color: white;
+      text-align: left;
+      padding: 1.2rem 1.5rem;
+      font-weight: 600;
+      border-bottom: 2px solid var(--primary-light);
+      position: sticky;
+      top: 0;
+    }
+
+    .routes-table th i {
+      margin-left: 5px;
+      opacity: 0.7;
+    }
+
+    .routes-table tbody tr {
+      border-bottom: 1px solid #e9ecef;
+      transition: var(--transition);
+    }
+
+    .routes-table tbody tr:nth-child(even) {
+      background-color: var(--table-row-even);
+    }
+
+    .routes-table tbody tr:hover {
+      background-color: var(--table-row-hover);
+      transform: translateX(5px);
+    }
+
+    .routes-table td {
+      padding: 1.2rem 1.5rem;
+      color: var(--text-medium);
+    }
+
+    .route-name {
+      font-weight: 600;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .route-name i {
+      color: var(--secondary);
+    }
+
+    .route-type {
+      display: inline-block;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .route-type.trotro {
+      background: #e0f7fa;
+      color: #006064;
+    }
+
+    .route-type.taxi {
+      background: #f3e5f5;
+      color: #4a148c;
+    }
+
+    .route-type.bus {
+      background: #e8f5e8;
+      color: #1b5e20;
+    }
+
+    .route-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .action-btn {
+      background: transparent;
+      border: 1px solid #dee2e6;
+      color: var(--primary);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .action-btn:hover {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    /* Table Stats */
+    .table-stats {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 2rem;
+      background: #f8f9fa;
+      border-top: 1px solid #e9ecef;
+      color: var(--text-light);
+      font-size: 0.9rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .pagination {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .page-ellipsis {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      color: var(--text-light);
+      user-select: none;
+    }
+
+    .page-btn {
+      background: white;
+      border: 1px solid #dee2e6;
+      color: var(--text-medium);
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition);
+      flex-shrink: 0;
+    }
+
+    .page-btn:hover {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .page-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .page-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Filter Modal */
+    .filter-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .filter-modal.active {
+      display: flex;
+    }
+
+    .filter-content {
+      background: white;
+      border-radius: var(--radius);
+      width: 100%;
+      max-width: 500px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+      animation: slideUp 0.4s ease;
+    }
+
+    .filter-header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: white;
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top-left-radius: 15px;
+      border-top-right-radius: 15px;
+    }
+
+    .filter-header h3 {
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+
+    .filter-header .close-filter {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: var(--transition);
+    }
+
+    .filter-header .close-filter:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: rotate(90deg);
+    }
+
+    .filter-body {
+      padding: 2rem;
+    }
+
+    .filter-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .filter-group h4 {
+      margin-bottom: 0.8rem;
+      color: var(--text-dark);
+    }
+
+    .filter-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .filter-option {
+      background: #f8f9fa;
+      border: 1px solid #dee2e6;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 0.9rem;
+    }
+
+    .filter-option:hover {
+      background: #e9ecef;
+    }
+
+    .filter-option.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .filter-footer {
+      padding: 1.5rem 2rem;
+      border-top: 1px solid #dee2e6;
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: var(--primary);
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: var(--transition);
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .btn:hover {
+      background: var(--primary-light);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(91, 33, 182, 0.2);
+    }
+
+    .btn-secondary {
+      background: var(--secondary);
+    }
+
+    .btn-secondary:hover {
+      background: var(--secondary-light);
+      box-shadow: 0 10px 20px rgba(255, 158, 0, 0.2);
+    }
+
+    .btn-outline0 {
+      background: transparent;
+      color: white;
+      border: 2px solid white;
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--primary);
+      border: 2px solid var(--primary);
+    }
+
+    .btn-outline:hover {
+      background: rgba(91, 33, 182, 0.05);
+    }
+
+    /* Loading Spinner Component */
+    .spinner-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem;
+      color: var(--primary);
+    }
+    .spinner {
+      border: 4px solid rgba(90, 24, 154, 0.1);
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      border-left-color: var(--primary);
+      animation: spin 1s linear infinite;
+      margin-bottom: 1rem;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Footer */
+    footer {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: white;
+      padding: 4rem 0 2rem;
+      margin-top: 4rem;
+    }
+
+    .footer-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 3rem;
+      margin-bottom: 3rem;
+    }
+
+    .footer-logo {
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+    }
+
+    .footer-links h4 {
+      margin-bottom: 1.5rem;
+      font-size: 1.2rem;
+    }
+
+    .footer-links ul {
+      list-style: none;
+    }
+
+    .footer-links li {
+      margin-bottom: 0.8rem;
+    }
+
+    .footer-links a {
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .footer-links a:hover {
+      color: var(--secondary);
+    }
+
+    .social-icons {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .social-icons a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      color: white;
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .social-icons a:hover {
+      background: var(--secondary);
+      transform: translateY(-3px);
+    }
+
+    .copyright {
+      text-align: center;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    /* Responsive */
+    @media (max-width: 992px) {
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        gap: 0;
+        background: var(--primary);
+        box-shadow: var(--shadow);
+        border-radius: 0 0 12px 12px;
+        overflow: hidden;
+        z-index: 999;
+      }
+
+      .nav-links.mobile-open {
+        display: flex;
+      }
+
+      .nav-links a {
+        display: block;
+        padding: 1rem 1.5rem;
+        width: 100%;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .nav-links li:last-child a {
+        border-bottom: none;
+      }
+
+      .mobile-menu-btn {
+        display: block;
+      }
+      
+      .hero {
+        padding: 4rem 1.5rem;
+      }
+      
+      section {
+        padding: 4rem 0;
+      }
+      
+      .table-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .table-controls {
+        width: 100%;
+        justify-content: space-between;
+      }
+      
+      .search-box input {
+        width: 250px;
+      }
+      
+      .search-box input:focus {
+        width: 250px;
+      }
+
+      .table-stats {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1.2rem 1.5rem;
+      }
+
+      .pagination {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+      
+      .section-title {
+        font-size: 2rem;
+      }
+      
+      .table-controls {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+      
+      .search-box {
+        width: 100%;
+      }
+      
+      .search-box input {
+        width: 100%;
+      }
+      
+      .search-box input:focus {
+        width: 100%;
+      }
+      
+      .filter-btn {
+        align-self: flex-start;
+      }
+      
+      .footer-content {
+        gap: 2rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-btns {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .btn {
+        width: 100%;
+        max-width: 300px;
+      }
+      
+      .filter-content {
+        margin: 1rem;
+      }
+
+      .container {
+        padding: 0 15px;
+      }
+
+      .hero {
+        padding: 3rem 1rem;
+      }
+
+      section {
+        padding: 3rem 0;
+      }
+
+      .table-header {
+        padding: 1.2rem 1rem;
+      }
+
+      .routes-table th,
+      .routes-table td {
+        padding: 0.9rem 1rem;
+        font-size: 0.9rem;
+      }
+
+      .logo {
+        font-size: 1.4rem;
+      }
+
+      .table-stats {
+        padding: 1rem;
+        font-size: 0.85rem;
+        text-align: center;
+      }
+
+      #tableStats {
+        width: 100%;
+        text-align: center;
+      }
+
+      .pagination {
+        gap: 0.35rem;
+      }
+
+      .page-btn,
+      .page-ellipsis {
+        width: 32px;
+        height: 32px;
+        font-size: 0.85rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER & NAVIGATION -->
+  <header>
+    <div class="container">
+      <nav>
+        <div class="logo">
+          <img src="assets/icon.png" style="width: 50px; height: 50px; border-radius: 50%;" alt="">
+          <span>GTT</span>
+        </div>
+        
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html#download">Download</a></li>
+        </ul>
+        
+        <button class="mobile-menu-btn">
+          <i class="fas fa-bars"></i>
+        </button>
+      </nav>
+      
+      <!-- HERO SECTION -->
+      <div class="hero">
+        <h1>Discover All Routes 🇬🇭</h1>
+        <p>
+          Browse our comprehensive database of trotro, taxi, bus and okada routes across Ghana.
+          Find the perfect route for your journey with detailed information and real-time updates.
+        </p>
+        <div class="hero-btns">
+          <a href="#routes-table" class="btn">
+            <i class="fas fa-search"></i> Search Routes
+          </a>
+          <a href="index.html#download" class="btn btn-outline0">
+            <i class="fas fa-download"></i> Get The App
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ROUTES TABLE SECTION -->
+  <section id="routes-table">
+    <div class="container">
+      <h2 class="section-title">Available Routes</h2>
+      <p class="section-subtitle">
+        Find your perfect route from our database of verified transportation routes across Ghana
+      </p>
+      
+      <div class="routes-table-container">
+        <div class="table-header">
+          <h2><i class="fas fa-route"></i> All Transportation Routes</h2>
+          <div class="table-controls">
+            <div class="search-box">
+              <i class="fas fa-search"></i>
+              <input type="text" id="routeSearch" placeholder="Search routes by name or location...">
+            </div>
+            <button class="filter-btn" id="openFilter">
+              <i class="fas fa-filter"></i> Filter Routes
+            </button>
+          </div>
+        </div>
+        
+        <div class="routes-table-wrapper">
+          <table class="routes-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Route Name</th>
+                <th>Transport Type</th>
+                <th>Estimated Fare</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="routesTableBody">
+              <!-- Content gets injected asynchronously by javascript -->
+            </tbody>
+          </table>
+        </div>
+        
+        <div class="table-stats">
+          <div id="tableStats">Loading routes...</div>
+          <div class="pagination" id="paginationControls">
+            <!-- Dynamic Pagination Buttons -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FILTER MODAL -->
+  <div class="filter-modal" id="filterModal">
+    <div class="filter-content">
+      <div class="filter-header">
+        <h3><i class="fas fa-filter"></i> Filter Routes</h3>
+        <button class="close-filter" id="closeFilter">&times;</button>
+      </div>
+      <div class="filter-body">
+        <div class="filter-group">
+          <h4>Transport Type</h4>
+          <div class="filter-options" id="typeFilterGroup">
+            <div class="filter-option active" data-filter="all">All Types</div>
+            <div class="filter-option" data-filter="trotro">Trotro</div>
+            <div class="filter-option" data-filter="taxi">Taxi</div>
+            <div class="filter-option" data-filter="bus">Bus</div>
+            <div class="filter-option" data-filter="okada">Okada</div>
+          </div>
+        </div>
+        
+        <div class="filter-group">
+          <h4>Popular Hub Areas</h4>
+          <div class="filter-options" id="areaFilterGroup">
+            <div class="filter-option active" data-filter="all">All Areas</div>
+            <div class="filter-option" data-filter="accra">Accra</div>
+            <div class="filter-option" data-filter="madina">Madina</div>
+            <div class="filter-option" data-filter="circle">Circle</div>
+            <div class="filter-option" data-filter="tema">Tema</div>
+            <div class="filter-option" data-filter="ashaiman">Ashaiman</div>
+          </div>
+        </div>
+      </div>
+      <div class="filter-footer">
+        <button class="btn btn-outline" id="resetFilters">Reset</button>
+        <button class="btn" id="applyFilters">Apply</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div>
+          <div class="footer-logo">
+            <img src="assets/icon.png" style="width: 50px; height: 50px; border-radius: 50%; margin-right: 2px;" alt="">GTT
+          </div>
+          <p style="margin-bottom: 1.5rem; opacity: 0.9;">
+            Revolutionizing transportation in Ghana through innovation and technology.
+          </p>
+        </div>
+        
+        <div class="footer-links">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="index.html">Go back</a></li>
+            <li><a href="index.html#download">Download</a></li>
+            <li><a href="https://wa.me/233209156811">Contact</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-links">
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="https://wa.me/233209156811">Partner With Me</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-links">
+          <h4>Contact Us</h4>
+          <ul>
+            <li><i class="fas fa-map-marker-alt" style="margin-right: 10px;"></i> Accra, Ghana</li>
+            <li><i class="fas fa-phone" style="margin-right: 10px;"></i><a href="tel:233209156811"><u>+233 20 915 6811</u></a></li>
+            <li><i class="fas fa-envelope" style="margin-right: 10px;"></i> <a href="mailto:nxnxtech@gmail.com"><u>nxnxtech@gmail.com</u></a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="copyright">
+        <p>© <span id="year"></span> Ghana Trotro Transit. All rights reserved. | Built in Ghana 🇬🇭 for Ghana's Future</p>
+      </div>
+    </div>
+  </footer>
+
+
+  <script src="things/scripts.js"></script>
+  <script>
+
+    document.getElementById("year").textContent= new Date().getFullYear();
+
+// State Variables
+let currentRoutes = [];
+let totalCount = 0;
+let currentPage = 1;
+const itemsPerPage = 10;
+
+// Filter State
+let searchString = '';
+let selectedType = 'all';
+let selectedArea = 'all';
+
+// Local CSV Fallback database data array if Supabase credentials aren't active yet
+const fallbackRoutes = [
+  { name: "Circle Station to Tema (Accra) Station", vehicle_type: "trotro", total_fare: 18.50 },
+  { name: "Madina Old Station to Abladjei Bus Stop", vehicle_type: "trotro", total_fare: 12.00 },
+  { name: "Circle Station to Abladjei Bus Stop", vehicle_type: "trotro", total_fare: 15.00 },
+  { name: "Abladjei Bus Stop to Nungua Station", vehicle_type: "trotro", total_fare: 22.00 },
+  { name: "Nungua Station to Ashaiman", vehicle_type: "trotro", total_fare: 10.50 },
+  { name: "Takoradi Old Accra Station to Nungua Station", vehicle_type: "bus", total_fare: 65.00 },
+  { name: "Madina Zongo Junction Station to Ashaiman Main Station", vehicle_type: "trotro", total_fare: 19.00 },
+  { name: "Legon Second (to Accra) to 37 Trotro Station", vehicle_type: "trotro", total_fare: 8.00 },
+  { name: "Abladjei Bus Stop to Haatso Bus Stop", vehicle_type: "taxi", total_fare: 14.00 },
+  { name: "Kaneshie to Kasoa", vehicle_type: "trotro", total_fare: 16.50 },
+  { name: "Madina Zongo Junction to Kaneshie Market Station", vehicle_type: "trotro", total_fare: 17.00 },
+  { name: "Abladjei Bus Stop to Old Ashongman Station", vehicle_type: "taxi", total_fare: 15.00 }
+];
+
+// Show dynamic alert messages
+function welcome() {
+  const fiveMins = 5 * 60 * 1000;
+  const now = new Date().getTime();
+  const lastRun = localStorage.getItem('lastFunctionRunTime');
+
+  if (!lastRun || (now - lastRun > fiveMins)) {
+    alert('UI Updated: Connected to database system framework schema configuration.');
+    localStorage.setItem('lastFunctionRunTime', now);
+  }
+}
+
+// Fetch routes data dynamically from Database or fallback array
+async function fetchRoutes() {
+  const tableBody = document.getElementById('routesTableBody');
+  tableBody.innerHTML = `
+    <tr>
+      <td colspan="5">
+        <div class="spinner-container">
+          <div class="spinner"></div>
+          <p>Fetching active records from database infrastructure...</p>
+        </div>
+      </td>
+    </tr>
+  `;
+
+  const from = (currentPage - 1) * itemsPerPage;
+  const to = from + itemsPerPage - 1;
+
+  // Updated reference here
+  if (supabaseClient) { 
+    try {
+      // Construct Base Query
+      let query = supabaseClient
+        .from('routes')
+        .select('*', { count: 'exact' });
+
+      // Apply Server-side search filter
+      if (searchString) {
+        query = query.ilike('name', `%${searchString}%`);
+      }
+
+      // Apply Vehicle type conditions
+      if (selectedType !== 'all') {
+        query = query.eq('vehicle_type', selectedType);
+      }
+
+      // Apply Hub Location Filter strings
+      if (selectedArea !== 'all') {
+        query = query.ilike('name', `%${selectedArea}%`);
+      }
+
+      // Range Pagination filters
+      const { data, count, error } = await query
+        .order('name', { ascending: true })
+        .range(from, to);
+
+      if (error) throw error;
+
+      currentRoutes = data || [];
+      totalCount = count || 0;
+    } catch (err) {
+      console.error("Supabase engine error:", err.message);
+      alert('Could not fetch from server. Check your internet and try again.')
+      return;
+      // loadFallbackData(from, to);
+    }
+  } else {
+    alert('Could not fetch from server, Try again later.')
+    return;
+    //loadFallbackData(from, to);
+  }
+
+  renderTable();
+}
+
+    // Local Mock Array filter compiler
+    function loadFallbackData(from, to) {
+      let data = fallbackRoutes;
+
+      if (searchString) {
+        data = data.filter(r => r.name.toLowerCase().includes(searchString.toLowerCase()));
+      }
+      if (selectedType !== 'all') {
+        data = data.filter(r => r.vehicle_type.toLowerCase() === selectedType.toLowerCase());
+      }
+      if (selectedArea !== 'all') {
+        data = data.filter(r => r.name.toLowerCase().includes(selectedArea.toLowerCase()));
+      }
+
+      totalCount = data.length;
+      currentRoutes = data.slice(from, to + 1);
+    }
+
+    // Render operational table records
+    function renderTable() {
+      const tableBody = document.getElementById('routesTableBody');
+      tableBody.innerHTML = '';
+
+      if (currentRoutes.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 2rem;">No active routes matching the selected search criteria.</td></tr>`;
+        document.getElementById('tableStats').textContent = "Showing 0 of 0 routes";
+        renderPagination(0);
+        return;
+      }
+
+      currentRoutes.forEach((route, index) => {
+        const globalIndex = (currentPage - 1) * itemsPerPage + index + 1;
+        const vType = route.vehicle_type ? route.vehicle_type.toLowerCase() : 'trotro';
+        const displayFare = route.total_fare ? `GHS ${parseFloat(route.total_fare).toFixed(2)}` : 'GHS 0.00';
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${globalIndex}</td>
+          <td>
+            <div class="route-name">
+              <i class="fas fa-route"></i>
+              ${route.name}
+            </div>
+          </td>
+          <td>
+            <span class="route-type ${vType}">
+              ${vType.charAt(0).toUpperCase() + vType.slice(1)}
+            </span>
+          </td>
+          <td><strong>${displayFare}</strong></td>
+          <td>
+            <div class="route-actions">
+              <button class="action-btn" title="View Details" onclick="viewRouteDetails('${route.name}', '${vType}', '${displayFare}', '${route.description || 'No additional details provided.'}')">
+                <i class="fas fa-eye"></i>
+              </button>
+              <!--<button class="action-btn" title="Bookmark" onclick="triggerAlert('${route.name}')">
+                <i class="fas fa-bookmark"></i>
+              </button>-->
+            </div>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
+
+      // Update text statistics metadata
+      const startRange = (currentPage - 1) * itemsPerPage + 1;
+      const endRange = Math.min(currentPage * itemsPerPage, totalCount);
+      document.getElementById('tableStats').textContent = `Showing ${startRange}-${endRange} of ${totalCount} database routes`;
+
+      renderPagination(totalCount);
+    }
+
+    // Build a truncated page list like: 1 2 .. 5 6 .. 12
+    // Always shows first page, last page, and a window around the current page.
+    function getPaginationRange(current, total) {
+      const pages = new Set([1, total, current - 1, current, current + 1]);
+
+      const sorted = [...pages]
+        .filter(p => p >= 1 && p <= total)
+        .sort((a, b) => a - b);
+
+      const result = [];
+      let prev = 0;
+      for (const p of sorted) {
+        if (prev && p - prev > 1) {
+          result.push('...');
+        }
+        result.push(p);
+        prev = p;
+      }
+      return result;
+    }
+
+    // Dynamically build pagination interface items
+    function renderPagination(total) {
+      const paginationContainer = document.getElementById('paginationControls');
+      paginationContainer.innerHTML = '';
+
+      const totalPages = Math.ceil(total / itemsPerPage);
+      if (totalPages <= 1) return;
+
+      // Previous Chevron Button
+      const prevBtn = document.createElement('button');
+      prevBtn.className = 'page-btn';
+      prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
+      prevBtn.disabled = currentPage === 1;
+      prevBtn.addEventListener('click', () => {
+        if (currentPage > 1) {
+          currentPage--;
+          fetchRoutes();
+        }
+      });
+      paginationContainer.appendChild(prevBtn);
+
+      // Numeric buttons (truncated: first, last, and a window around current page)
+      const pageNumbers = getPaginationRange(currentPage, totalPages);
+      pageNumbers.forEach(entry => {
+        if (entry === '...') {
+          const ellipsis = document.createElement('span');
+          ellipsis.className = 'page-ellipsis';
+          ellipsis.textContent = '..';
+          paginationContainer.appendChild(ellipsis);
+          return;
+        }
+
+        const pageBtn = document.createElement('button');
+        pageBtn.className = `page-btn ${currentPage === entry ? 'active' : ''}`;
+        pageBtn.textContent = entry;
+        pageBtn.addEventListener('click', () => {
+          currentPage = entry;
+          fetchRoutes();
+        });
+        paginationContainer.appendChild(pageBtn);
+      });
+
+      // Next Chevron Button
+      const nextBtn = document.createElement('button');
+      nextBtn.className = 'page-btn';
+      nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+      nextBtn.disabled = currentPage === totalPages;
+      nextBtn.addEventListener('click', () => {
+        if (currentPage < totalPages) {
+          currentPage++;
+          fetchRoutes();
+        }
+      });
+      paginationContainer.appendChild(nextBtn);
+    }
+
+    // Action execution helpers
+    function viewRouteDetails(name, type, fare, description) {
+      alert(`Route Details:\n\nName: ${name}\nVector Type: ${type.toUpperCase()}\nBase Fare: ${fare}\nNotes: ${description}\n\nDownload the mobile app or cisit the web-app to access live tracking & updates.`);
+    }
+
+    function triggerAlert(routeName) {
+      alert(`${routeName}\n\nFeature currently locked on web interface. Please install the Android application utility to manage custom route bookmarks.`);
+    }
+
+    // Setup Modals and Interaction configurations
+    document.addEventListener('DOMContentLoaded', () => {
+      //welcome();
+      setTimeout(() => {
+        fetchRoutes();
+      }, 3000)
+
+      // Setup Search Listener hook with a basic debouncer
+      const searchInput = document.getElementById('routeSearch');
+      let searchDebounceTimer;
+      searchInput.addEventListener('input', (e) => {
+        clearTimeout(searchDebounceTimer);
+        searchDebounceTimer = setTimeout(() => {
+          searchString = e.target.value.trim();
+          currentPage = 1; // reset view tracking context
+          fetchRoutes();
+        }, 400);
+      });
+
+      // Filter Modal Actions Configuration Setup
+      const modal = document.getElementById('filterModal');
+      document.getElementById('openFilter').addEventListener('click', () => modal.classList.add('active'));
+      document.getElementById('closeFilter').addEventListener('click', () => modal.classList.remove('active'));
+
+      // Filter option structural click configurations
+      setupFilterGroupSelection('typeFilterGroup');
+      setupFilterGroupSelection('areaFilterGroup');
+
+      // Apply Button Click Handling Context logic
+      document.getElementById('applyFilters').addEventListener('click', () => {
+        const activeTypeElement = document.querySelector('#typeFilterGroup .filter-option.active');
+        const activeAreaElement = document.querySelector('#areaFilterGroup .filter-option.active');
+
+        selectedType = activeTypeElement ? activeTypeElement.dataset.filter : 'all';
+        selectedArea = activeAreaElement ? activeAreaElement.dataset.filter : 'all';
+        
+        currentPage = 1;
+        modal.classList.remove('active');
+        fetchRoutes();
+      });
+
+      // Reset configurations
+      document.getElementById('resetFilters').addEventListener('click', () => {
+        resetActiveFilterGroup('typeFilterGroup');
+        resetActiveFilterGroup('areaFilterGroup');
+        searchInput.value = '';
+        searchString = '';
+        selectedType = 'all';
+        selectedArea = 'all';
+        currentPage = 1;
+        modal.classList.remove('active');
+        fetchRoutes();
+      });
+
+      // Navigation menu toggle switch for mobile
+      const navLinks = document.querySelector('.nav-links');
+      document.querySelector('.mobile-menu-btn').addEventListener('click', () => {
+        navLinks.classList.toggle('mobile-open');
+      });
+
+      // Close mobile menu after a link is tapped
+      navLinks.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => navLinks.classList.remove('mobile-open'));
+      });
+
+      // Avoid a stuck-open menu if the viewport grows back to desktop size
+      window.addEventListener('resize', () => {
+        if (window.innerWidth > 992) {
+          navLinks.classList.remove('mobile-open');
+        }
+      });
+    });
+
+    function setupFilterGroupSelection(groupId) {
+      const group = document.getElementById(groupId);
+      const options = group.querySelectorAll('.filter-option');
+      options.forEach(opt => {
+        opt.addEventListener('click', () => {
+          options.forEach(o => o.classList.remove('active'));
+          opt.classList.add('active');
+        });
+      });
+    }
+
+    function resetActiveFilterGroup(groupId) {
+      const group = document.getElementById(groupId);
+      group.querySelectorAll('.filter-option').forEach(o => o.classList.remove('active'));
+      group.querySelector('[data-filter="all"]').classList.add('active');
+    }
+  </script>
+</body>
+</html>
