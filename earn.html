@@ -7,6 +7,8 @@
   <link rel="icon" type="image/png" href="assets/icon.png" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="things/supabase.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -553,12 +555,8 @@
 
       <form
         name="contributor-registration"
-        method="POST"
-        data-netlify="true"
-        netlify-honeypot="bot-field"
         onsubmit="handleSubmit(event)"
       >
-        <input type="hidden" name="form-name" value="contributor-registration" />
         <p style="display:none;"><label>Don't fill this: <input name="bot-field" /></label></p>
 
         <div class="field">
@@ -617,19 +615,32 @@
     btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting…';
     try {
+      if (!supabaseClient) throw new Error('Supabase client not initialized');
+
       const data = new FormData(e.target);
-      await fetch('/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams(data).toString(),
-      });
+
+      // Honeypot check
+      if (data.get('bot-field')) throw new Error('Bot detected');
+
+      const { error } = await supabaseClient.from('earner_form').insert([
+        {
+          full_name: data.get('fullName'),
+          email: data.get('email'),
+          phone: data.get('phone'),
+          location: data.get('location'),
+        },
+      ]);
+
+      if (error) throw error;
+
       document.getElementById('modalFormInner').style.opacity = '0';
       setTimeout(() => {
         document.getElementById('modalFormInner').style.display = 'none';
         document.getElementById('modalSuccess').classList.add('show');
       }, 200);
       e.target.reset();
-    } catch {
+    } catch (err) {
+      console.error(err);
       showToast('Something went wrong. Please try again.');
     } finally {
       btn.disabled = false;
