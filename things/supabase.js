@@ -10,3 +10,22 @@ if (typeof supabase !== "undefined" && SUPABASE_URL && SUPABASE_ANON_KEY) {
 } else {
   console.warn("Supabase client not initialized. Check that config/supabase.js is loaded after the Supabase CDN script.");
 }
+
+async function submitReport({ name, type, message, routeId = null, routeName = null, userId = null }) {
+  if (!supabaseClient) {
+    return { error: new Error('Supabase client is not initialized.') };
+  }
+
+  const { error } = await supabaseClient
+    .from('reports')
+    .insert({
+      route_id: routeId,
+      route_name: routeName,
+      user_id: userId, 
+      reason: type,
+      message: 'From: ' + name + '\n\n' + message,
+      status: 'pending'
+    });
+
+  return { error };
+}

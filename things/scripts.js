@@ -72,7 +72,7 @@ function updateNavScrollStyle() {
 })();
 
 // ===== MODAL MANAGEMENT =====
-let selectedBeta = 'beta4';
+let selectedBeta = 'beta5';
 let selectedPlatform = 'android';
 
 window.addEventListener('load', () => {
@@ -129,21 +129,27 @@ function selectPlatform(platform) {
     }
 }
 
+let fileSize = '92.7';
+document.getElementById('fileSize').textContent = 'Size: '+fileSize + ' MB';
+
 function selectBeta(version) {
-    if (['beta1','beta2','beta3'].includes(version)) {
+    if (['beta1','beta2','beta3', 'beta4'].includes(version)) {
         showToast('Unavailable','This beta version is no longer available.');
         return;
     }
     selectedBeta = version;
     document.querySelectorAll('.beta-version-card').forEach(c => c.classList.remove('active'));
     event.currentTarget.classList.add('active');
-    const names = { beta322:'Beta 3.2.2', beta4:'Beta 4' };
+    const names = { beta4:'Beta 4', beta5:'Beta 5' };
     document.getElementById('selectedVersion').textContent = names[version] || version;
 }
 
 function startDownload() {
-    const urls = { beta322:'./gtt-b3_2_2.apk', beta4:'https://drive.google.com/file/d/1EWc3IU3zlIrNCTp6qI6oVw02hy-rnvR9/view?usp=drive_link' };
-    const versionNames = { beta322:'Beta 3.2.2', beta4:'Beta 4' };
+    const urls = {
+        beta4: 'https://drive.google.com/file/d/1EWc3IU3zlIrNCTp6qI6oVw02hy-rnvR9/view?usp=drive_link',
+        beta5: 'https://drive.google.com/file/d/1EnIiuMNspspBRoNrvoJnnuxUXbXBOb22/view?usp=drive_link'
+    };
+    const versionNames = { beta4:'Beta 4', beta5:'Beta 5' };
 
     if (!urls[selectedBeta]) {
         setTimeout(() => showToast('Version Unavailable', 'This version is not available. Please select a different version.'), 8000);
@@ -213,16 +219,32 @@ if (video) {
     video.addEventListener('ended', () => { playButton.style.opacity = '1'; });
 }
 
-// ===== WHATSAPP FEEDBACK =====
-function sendToWhatsApp(event) {
+// ===== FEEDBACK -> DB (reports table) =====
+async function sendFeedbackToDb(event) {
     event.preventDefault();
-    const name = document.getElementById('userName').value;
+
+    const name = document.getElementById('userName').value.trim();
     const type = document.getElementById('feedbackType').value;
-    const message = document.getElementById('userMessage').value;
-    const text = '*New Feedback for Ghana Trotro Transit*%0A%0A*From:* ' + name + '%0A*Type:* ' + type + '%0A%0A*Message:*%0A' + message;
-    window.open('https://wa.me/233209156811?text=' + text,'_blank');
-    document.getElementById('feedbackForm').reset();
-    showToast('Message Ready!','WhatsApp has opened with your message pre-filled.');
+    const message = document.getElementById('userMessage').value.trim();
+
+    const submitBtn = document.getElementById('feedbackSubmitBtn');
+    const originalBtnHtml = submitBtn.innerHTML;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span>Sending...</span>';
+
+    try {
+        const { error } = await submitReport({ name, type, message });
+        if (error) throw error;
+
+        document.getElementById('feedbackForm').reset();
+        showToast('Feedback Sent!', 'Thanks for helping us improve Ghana Trotro Transit.');
+    } catch (err) {
+        console.error('Error submitting feedback:', err);
+        showToast('Something Went Wrong', 'Could not send your feedback. Please try again.');
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnHtml;
+    }
 }
 
 // ===== SMOOTH SCROLL + CLOSE MENU =====
