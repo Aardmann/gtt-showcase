@@ -145,9 +145,13 @@ function selectBeta(version) {
 }
 
 function startDownload() {
+    if (selectedBeta == 'beta5') {
+        showToast('Beta 5 unavailable at the moment, will be available in 24 hours.');
+        return;
+    }
     const urls = {
-        beta4: 'https://drive.google.com/file/d/1EWc3IU3zlIrNCTp6qI6oVw02hy-rnvR9/view?usp=drive_link',
-        beta5: 'https://drive.google.com/file/d/1EnIiuMNspspBRoNrvoJnnuxUXbXBOb22/view?usp=drive_link'
+        beta4: '',
+        beta5: ''
     };
     const versionNames = { beta4:'Beta 4', beta5:'Beta 5' };
 
