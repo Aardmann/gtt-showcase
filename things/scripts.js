@@ -133,9 +133,12 @@ let fileSize = '92.7';
 document.getElementById('fileSize').textContent = 'Size: '+fileSize + ' MB';
 
 function selectBeta(version) {
-    if (['beta1','beta2','beta3', 'beta4'].includes(version)) {
+    if (['beta1','beta2','beta3'].includes(version)) {
         showToast('Unavailable','This beta version is no longer available.');
         return;
+    }
+    if (version === 'beta4') {
+        showToast('Beta 4 - May not have new features.', 'Consider downloading Beta 5 when it becomes available.');
     }
     selectedBeta = version;
     document.querySelectorAll('.beta-version-card').forEach(c => c.classList.remove('active'));
@@ -146,11 +149,11 @@ function selectBeta(version) {
 
 function startDownload() {
     if (selectedBeta == 'beta5') {
-        showToast('Beta 5 unavailable at the moment, will be available in 24 hours.');
+        showToast('Beta 5 unavailable', 'Beta 5 is currently unavailable. Will be available in the 72 hours. Please select a Beta 4.');
         return;
     }
     const urls = {
-        beta4: '',
+        beta4: 'https://drive.google.com/file/d/1EWc3IU3zlIrNCTp6qI6oVw02hy-rnvR9/view?usp=drive_link',
         beta5: ''
     };
     const versionNames = { beta4:'Beta 4', beta5:'Beta 5' };

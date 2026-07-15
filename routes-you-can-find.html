@@ -1098,7 +1098,9 @@ async function fetchRoutes() {
       // Construct Base Query
       let query = supabaseClient
         .from('routes')
-        .select('*', { count: 'exact' });
+        .select('*', {count: 'exact'})
+        .eq('approved', true)
+        .order('total_fare');
 
       // Apply Server-side search filter
       if (searchString) {
