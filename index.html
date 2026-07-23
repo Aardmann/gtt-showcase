@@ -81,13 +81,23 @@
                                 <span class="px-2.5 py-1 bg-gray-700 text-white text-xs rounded-full whitespace-nowrap">21/05/26</span>
                             </div>
                         </div>
-                        <div class="beta-version-card active rounded-3xl p-4 cursor-pointer hover:border-purple-500/40" onclick="selectBeta('beta5')">
+                        <div class="beta-version-card rounded-3xl p-4 cursor-pointer hover:border-gray-500/40" onclick="selectBeta('beta5')">
                             <div class="flex items-center justify-between"><div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-full bg-purple-700 flex items-center justify-center text-xs font-bold text-white">5
+                                <div class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center text-xs font-bold text-white">5
                                 </div>
-                                <div><h4 class="font-bold text-sm">Beta 5: Latest</h4><p class="text-xs text-gray-400">UI/UX · Security updates· Bug fixes</p></div>
+                                <div><h4 class="font-bold text-sm">Beta 5</h4><p class="text-xs text-gray-400">UI/UX · Security updates· Bug fixes</p></div>
                                 </div>
-                                <span class="px-2.5 py-1 bg-purple-700 text-white text-xs rounded-full whitespace-nowrap">12/07/26</span>
+                                <span class="px-2.5 py-1 bg-gray-700 text-white text-xs rounded-full whitespace-nowrap">12/07/26</span>
+                            </div>
+                        </div>
+
+                        <div class="beta-version-card active rounded-3xl p-4 cursor-pointer hover:border-purple-500/40" onclick="selectBeta('beta6')">
+                            <div class="flex items-center justify-between"><div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-purple-700 flex items-center justify-center text-xs font-bold text-white">6
+                                </div>
+                                <div><h4 class="font-bold text-sm">Beta 6: Latest</h4><p class="text-xs text-gray-400">UI/UX · Security updates· Waakye</p></div>
+                                </div>
+                                <span class="px-2.5 py-1 bg-purple-700 text-white text-xs rounded-full whitespace-nowrap">23/07/26</span>
                             </div>
                         </div>
                         
@@ -129,7 +139,7 @@
             </div>
         </div>
         <div id="downloadActions" class="border-t border-white/10 p-4 sm:p-6 flex-shrink-0">
-            <div class="flex items-center justify-between text-sm text-gray-400 mb-3"><span>Selected: <strong id="selectedVersion" class="text-white">Beta 5</strong></span><span id="fileSize"></span></div>
+            <div class="flex items-center justify-between text-sm text-gray-400 mb-3"><span>Selected: <strong id="selectedVersion" class="text-white">Beta 6</strong></span><span id="fileSize"></span></div>
             <div class="flex flex-col sm:flex-row gap-3">
                 <button onclick="startDownload()" id="downloadBtn" class="flex-1 py-3.5 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 rounded-3xl font-bold transition-all flex items-center justify-center gap-2 text-white group"><i class="fas fa-download group-hover:animate-bounce"></i><span>Download APK</span></button>
                 <a href="routes-you-can-find.html" target="_blank" class="flex-1 py-3.5 bg-white/10 hover:bg-white/20 border border-white/20 rounded-3xl font-semibold transition-all flex items-center justify-center gap-2"><i class="fas fa-map-marked-alt text-purple-400"></i><span>View Routes</span></a>
@@ -206,33 +216,9 @@
             <div class="relative flex items-center justify-center">
                 <div class="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-3xl"></div>
                 <div class="absolute bottom-0 left-0 right-0 h-16 bg-slate-800/50 rounded-full blur-xl"></div>
-                <div class="absolute bottom-6 left-0 right-0 h-1.5 bg-slate-700/50"><div class="h-full w-16 bg-yellow-400/50 rounded-full road-line absolute"></div></div>
+               
                 <div class="relative z-10 trotro-animate trotro-shadow w-full max-w-xs sm:max-w-md">
-                    <svg viewBox="0 0 400 240" class="w-full h-auto drop-shadow-2xl">
-                        <ellipse cx="200" cy="220" rx="160" ry="14" fill="rgba(0,0,0,0.3)" filter="blur(6px)"/>
-                        <g transform="translate(20,20)">
-                            <rect x="20" y="80" width="320" height="110" rx="18" ry="18" fill="#f97316"/>
-                            <rect x="20" y="80" width="320" height="35" rx="10" ry="10" fill="#ea580c"/>
-                            <rect x="30" y="88" width="70" height="25" rx="6" ry="6" fill="#bae6fd" opacity="0.8"/>
-                            <rect x="115" y="88" width="70" height="25" rx="6" ry="6" fill="#bae6fd" opacity="0.8"/>
-                            <rect x="200" y="88" width="70" height="25" rx="6" ry="6" fill="#bae6fd" opacity="0.8"/>
-                            <rect x="280" y="88" width="55" height="25" rx="6" ry="6" fill="#bae6fd" opacity="0.9"/>
-                            <circle cx="75" cy="195" r="25" fill="#1e293b"/>
-                            <circle cx="75" cy="195" r="17" fill="#64748b"/>
-                            <circle cx="75" cy="195" r="8" fill="#334155"/>
-                            <circle cx="270" cy="195" r="25" fill="#1e293b"/>
-                            <circle cx="270" cy="195" r="17" fill="#64748b"/>
-                            <circle cx="270" cy="195" r="8" fill="#334155"/>
-                            <circle cx="330" cy="135" r="8" fill="#fef3c7"/>
-                            <circle cx="330" cy="135" r="5" fill="#fbbf24"/>
-                            <rect x="15" y="125" width="8" height="14" fill="#dc2626" rx="2"/>
-                            <text x="180" y="165" text-anchor="middle" font-family="Arial" font-size="26" fill="#7c2d12" font-weight="bold">TROTRO</text>
-                            <rect x="335" y="155" width="10" height="14" fill="#64748b" rx="2"/>
-                            <rect x="15" y="155" width="10" height="14" fill="#64748b" rx="2"/>
-                        </g>
-                        <g class="float-animation"><path d="M 100 30 Q 100 10 115 10 Q 130 10 130 30 Q 130 45 115 60 Q 100 45 100 30 Z" fill="#7c3aed" stroke="#a855f7" stroke-width="2"/><circle cx="115" cy="28" r="8" fill="white"/><text x="115" y="32" text-anchor="middle" font-size="11" fill="#7c3aed" font-weight="bold">A</text></g>
-                        <g class="float-animation" style="animation-delay:1s"><path d="M 300 40 Q 300 20 315 20 Q 330 20 330 40 Q 330 55 315 70 Q 300 55 300 40 Z" fill="#22c55e" stroke="#4ade80" stroke-width="2"/><circle cx="315" cy="38" r="8" fill="white"/><text x="315" y="42" text-anchor="middle" font-size="11" fill="#22c55e" font-weight="bold">B</text></g>
-                    </svg>
+                    <img src="assets/trotro-vehicle.png" height="600px" width="700px" alt="GTT-Trotro">
                 </div>
                 <div class="hero-float-card absolute -left-2 sm:-left-4 top-8 sm:top-10 bg-white/10 backdrop-blur-md rounded-3xl p-2.5 sm:p-3 border border-white/20 float-animation shadow-xl"><div class="flex items-center gap-2"><div class="w-7 h-7 rounded-full bg-green-500 flex items-center justify-center"><i class="fas fa-check text-white text-xs"></i></div><div><div class="text-xs font-bold">Route Found</div><div class="text-[10px] text-gray-300">Circle to Madina</div></div></div></div>
                 <div class="hero-float-card absolute -right-2 sm:-right-4 bottom-16 sm:bottom-20 bg-white/10 backdrop-blur-md rounded-3xl p-2.5 sm:p-3 border border-white/20 float-animation shadow-xl" style="animation-delay:0.5s"><div class="flex items-center gap-2"><i class="fas fa-cedi-sign text-yellow-400"></i><div><div class="text-xs font-bold">9.50</div><div class="text-[10px] text-gray-300">Estimated Fare</div></div></div></div>
@@ -254,7 +240,7 @@
         <div class="mobile-carousel-container md:hidden mb-8" data-carousel="problem">
             <div class="mobile-carousel-track">
                 <div class="mobile-carousel-card"><div class="problem-card rounded-3xl p-5 sm:p-8 h-full"><div class="w-12 h-12 sm:w-16 sm:h-16 bg-purple-500/20 rounded-3xl flex items-center justify-center mb-4 sm:mb-6"><i class="fas fa-road text-2xl sm:text-3xl text-white-400"></i></div><h3 class="text-base sm:text-xl font-bold mb-2 sm:mb-3 text-white-500">Beyond Google Maps</h3><p class="text-gray-400 leading-relaxed text-sm">Google shows direct routes A to B. Our app provides detailed trotro routes with all intermediate stops, stations, and junctions specific to Ghana's transit system.</p></div></div>
-                <div class="mobile-carousel-card"><div class="problem-card rounded-3xl p-5 sm:p-8 h-full"><div class="w-12 h-12 sm:w-16 sm:h-16 bg-purple-500/20 rounded-3xl flex items-center justify-center mb-4 sm:mb-6"><i class="fas fa-hand-holding-usd text-2xl sm:text-3xl text-white-400"></i></div><h3 class="text-base sm:text-xl font-bold mb-2 sm:mb-3 text-white-500">Never Get Stranded</h3><p class="text-gray-400 leading-relaxed text-sm">With real-time guidance, stop notifications, and route tracking, you will always know exactly where to go — no more asking strangers or getting lost.</p></div></div>
+                <div class="mobile-carousel-card"><div class="problem-card rounded-3xl p-5 sm:p-8 h-full"><div class="w-12 h-12 sm:w-16 sm:h-16 bg-purple-500/20 rounded-3xl flex items-center justify-center mb-4 sm:mb-6"><i class="fas fa-hand-holding-usd text-2xl sm:text-3xl text-white-400"></i></div><h3 class="text-base sm:text-xl font-bold mb-2 sm:mb-3 text-white-500">Never Get Stranded</h3><p class="text-gray-400 leading-relaxed text-sm">With real-time guidance, stop notifications, and route tracking, you will always know exactly where to go, no more asking strangers or getting lost.</p></div></div>
                 <div class="mobile-carousel-card"><div class="problem-card rounded-3xl p-5 sm:p-8 h-full"><div class="w-12 h-12 sm:w-16 sm:h-16 bg-purple-500/20 rounded-3xl flex items-center justify-center mb-4 sm:mb-6"><i class="fas fa-money-bill-wave text-2xl sm:text-3xl text-white-400"></i></div><h3 class="text-base sm:text-xl font-bold mb-2 sm:mb-3 text-white-500">Transparent Fares</h3><p class="text-gray-400 leading-relaxed text-sm">Get real-time fare updates directly from GPRTU. Know the exact fare before boarding, avoid conflicts, and plan your budget accurately.</p></div></div>
             </div>
             <div class="carousel-dots flex justify-center gap-2 mt-4"></div>
@@ -262,7 +248,7 @@
         <!-- Desktop Grid -->
         <div class="hidden md:grid md:grid-cols-3 gap-5 sm:gap-8">
             <div class="problem-card rounded-3xl p-5 sm:p-8 hover:transform hover:scale-105 transition-all duration-300"><div class="w-12 h-12 sm:w-16 sm:h-16 bg-purple-500/20 rounded-3xl flex items-center justify-center mb-4 sm:mb-6"><i class="fas fa-road text-2xl sm:text-3xl text-white-400"></i></div><h3 class="text-base sm:text-xl font-bold mb-2 sm:mb-3 text-white-500">Beyond Google Maps</h3><p class="text-gray-400 leading-relaxed text-sm">Google shows direct routes A to B. Our app provides detailed trotro routes with all intermediate stops, stations, and junctions specific to Ghana's transit system.</p></div>
-            <div class="problem-card rounded-3xl p-5 sm:p-8 hover:transform hover:scale-105 transition-all duration-300"><div class="w-12 h-12 sm:w-16 sm:h-16 bg-purple-500/20 rounded-3xl flex items-center justify-center mb-4 sm:mb-6"><i class="fas fa-hand-holding-usd text-2xl sm:text-3xl text-white-400"></i></div><h3 class="text-base sm:text-xl font-bold mb-2 sm:mb-3 text-white-500">Never Get Stranded</h3><p class="text-gray-400 leading-relaxed text-sm">With real-time guidance, stop notifications, and route tracking, you will always know exactly where to go — no more asking strangers or getting lost.</p></div>
+            <div class="problem-card rounded-3xl p-5 sm:p-8 hover:transform hover:scale-105 transition-all duration-300"><div class="w-12 h-12 sm:w-16 sm:h-16 bg-purple-500/20 rounded-3xl flex items-center justify-center mb-4 sm:mb-6"><i class="fas fa-hand-holding-usd text-2xl sm:text-3xl text-white-400"></i></div><h3 class="text-base sm:text-xl font-bold mb-2 sm:mb-3 text-white-500">Never Get Stranded</h3><p class="text-gray-400 leading-relaxed text-sm">With real-time guidance, stop notifications, and route tracking, you will always know exactly where to go, no more asking strangers or getting lost.</p></div>
             <div class="problem-card rounded-3xl p-5 sm:p-8 hover:transform hover:scale-105 transition-all duration-300 sm:col-span-2 md:col-span-1"><div class="w-12 h-12 sm:w-16 sm:h-16 bg-purple-500/20 rounded-3xl flex items-center justify-center mb-4 sm:mb-6"><i class="fas fa-money-bill-wave text-2xl sm:text-3xl text-white-400"></i></div><h3 class="text-base sm:text-xl font-bold mb-2 sm:mb-3 text-white-500">Transparent Fares</h3><p class="text-gray-400 leading-relaxed text-sm">Get real-time fare updates directly from GPRTU. Know the exact fare before boarding, avoid conflicts, and plan your budget accurately.</p></div>
         </div>
         <div class="mt-10 sm:mt-16 bg-slate-800/50 rounded-3xl sm:rounded-3xl p-6 sm:p-8 md:p-12 border border-purple-500/20" id="numbers-box">
@@ -330,7 +316,7 @@
         <div class="preview-scroll-wrap mb-8 sm:mb-14">
             <div class="preview-scroll-item preview-card phone-frame cursor-pointer" onclick="openPreview(0)"><div class="phone-screen aspect-[9/19]"><div class="phone-notch"></div><img src="assets/phone-images/homescreen.PNG" alt="Home Screen" class="w-full h-full object-cover"></div><div class="mt-3 text-center px-1"><h4 class="font-semibold text-xs sm:text-sm">Home Screen</h4><p class="text-xs text-gray-400 mt-0.5">Wide map view</p></div></div>
             <div class="preview-scroll-item preview-card phone-frame cursor-pointer" onclick="openPreview(1)"><div class="phone-screen aspect-[9/19]"><div class="phone-notch"></div><img src="assets/phone-images/findroutes.PNG" alt="Route Search" class="w-full h-full object-cover"></div><div class="mt-3 text-center px-1"><h4 class="font-semibold text-xs sm:text-sm">Route Search</h4><p class="text-xs text-gray-400 mt-0.5">Search across Ghana</p></div></div>
-            <div class="preview-scroll-item preview-card phone-frame cursor-pointer" onclick="openPreview(2)"><div class="phone-screen aspect-[9/19]"><div class="phone-notch"></div><img src="assets/phone-images/foundroutes.jpeg" alt="Live Navigation" class="w-full h-full object-cover"></div><div class="mt-3 text-center px-1"><h4 class="font-semibold text-xs sm:text-sm">Live Navigation</h4><p class="text-xs text-gray-400 mt-0.5">Real-time tracking</p></div></div>
+            <div class="preview-scroll-item preview-card phone-frame cursor-pointer" onclick="openPreview(2)"><div class="phone-screen aspect-[9/19]"><div class="phone-notch"></div><img src="assets/phone-images/foundroutes.PNG" alt="Live Navigation" class="w-full h-full object-cover"></div><div class="mt-3 text-center px-1"><h4 class="font-semibold text-xs sm:text-sm">Live Navigation</h4><p class="text-xs text-gray-400 mt-0.5">Real-time tracking</p></div></div>
             <div class="preview-scroll-item preview-card phone-frame cursor-pointer" onclick="openPreview(3)"><div class="phone-screen aspect-[9/19]"><div class="phone-notch"></div><img src="assets/phone-images/savedroutes.PNG" alt="Saved Routes" class="w-full h-full object-cover"></div><div class="mt-3 text-center px-1"><h4 class="font-semibold text-xs sm:text-sm">Saved Routes</h4><p class="text-xs text-gray-400 mt-0.5">Quick favourites</p></div></div>
             <div class="preview-scroll-item preview-card phone-frame cursor-pointer" onclick="openPreview(4)"><div class="phone-screen aspect-[9/19]"><div class="phone-notch"></div><img src="assets/phone-images/createroute.PNG" alt="Custom Routes" class="w-full h-full object-cover"></div><div class="mt-3 text-center px-1"><h4 class="font-semibold text-xs sm:text-sm">Custom Routes</h4><p class="text-xs text-gray-400 mt-0.5">Create &amp; share</p></div></div>
         </div>
@@ -400,7 +386,7 @@
                 <p class="text-gray-400 text-sm">See Ghana Trotro Transit in action</p>
             </div>
             <div class="video-container" id="videoContainer" style="aspect-ratio:9/16; max-width:400px; height:auto; margin:0 auto;">
-                <iframe id="demoVideo" src="https://drive.google.com/file/d/1-dVdOWJdBjHbNXywGHMdpUAMaDUrrRW3/preview" title="Ghana Trotro Transit Demo Video" style="width:100%; height:100%; border:0; border-radius:1rem;" allow="autoplay" allowfullscreen></iframe>
+                <iframe id="demoVideo" src="https://drive.google.com/file/d/19t4WEqpLocDijBplaMAL97JHVleLkFsq/view?usp=sharing" title="Ghana Trotro Transit Demo Video" style="width:100%; height:100%; border:0; border-radius:1rem;" allow="autoplay" allowfullscreen></iframe>
             </div>
         </div>
     </div>
@@ -444,7 +430,7 @@
             <div class="platform-card bg-slate-800/50 backdrop-blur border border-green-500/30 rounded-3xl p-6 sm:p-8 hover:border-green-500 transition-all duration-300 group" data-platform="android">
                 <div class="w-16 h-16 sm:w-20 sm:h-20 mx-auto bg-green-500/20 rounded-3xl flex items-center justify-center mb-4 sm:mb-6 platform-icon group-hover:scale-110 transition-transform"><i class="fab fa-android text-4xl sm:text-5xl text-green-500"></i></div>
                 <h3 class="text-lg sm:text-xl font-bold mb-2">Android</h3>
-                <p class="text-gray-400 text-xs sm:text-sm mb-5 sm:mb-6">Download APK<br>Version aaya! - Beta 5<br></p>
+                <p class="text-gray-400 text-xs sm:text-sm mb-5 sm:mb-6">Download APK<br>Version aaya! - Beta 6<br></p>
                 <button onclick="openDownloadModal(); selectPlatform('android');" class="w-full py-3 bg-green-600 hover:bg-green-700 rounded-3xl font-semibold transition-colors flex items-center justify-center gap-2 text-white text-sm"><i class="fas fa-download"></i><span>Download</span></button>
             </div>
             <div class="platform-card bg-slate-800/50 backdrop-blur border border-gray-300/20 rounded-3xl p-6 sm:p-8 hover:border-gray-400 transition-all duration-300 group opacity-80" data-platform="ios">

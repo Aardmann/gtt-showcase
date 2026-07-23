@@ -2,7 +2,7 @@
 const previewData = [
     { title:"Home Screen", desc:"Simple wide map view", src:"../assets/phone-images/homescreen.PNG", alt:"Home Screen" },
     { title:"Route Search & Recents", desc:"Search for routes across Ghana", src:"../assets/phone-images/findroutes.PNG", alt:"Route Search" },
-    { title:"Live Navigation", desc:"Real-time tracking with stop alerts", src:"../assets/phone-images/foundroutes.jpeg", alt:"Navigation" },
+    { title:"Live Navigation", desc:"Real-time tracking with stop alerts", src:"../assets/phone-images/foundroutes.PNG", alt:"Navigation" },
     { title:"Saved Routes", desc:"Save and quickly access frequent journeys", src:"../assets/phone-images/savedroutes.PNG", alt:"Saved Routes" },
     { title:"Create Personal Routes", desc:"Create & share custom routes", src:"../assets/phone-images/createroute.PNG", alt:"Custom Routes" }
 ];
@@ -130,9 +130,9 @@ function selectPlatform(platform) {
 }
 
 
-showToast('Beta 5 now available', 'Beta 5 is now available for download. Click the dwownload button to get the latest update.')
+setTimeout(() => showToast('Beta 6 now available', 'Beta 6 is now available for download. Click the download button to get the latest update.'), 5000);
 
-let fileSize = '92.7';
+let fileSize = '97';
 document.getElementById('fileSize').textContent = 'Size: '+fileSize + ' MB';
 
 function selectBeta(version) {
@@ -141,22 +141,30 @@ function selectBeta(version) {
         return;
     }
     if (version === 'beta4') {
-        document.getElementById('fileSize').textContent = 'Size: 92.2 MB';
-        showToast('Beta 4 - May not have new features.', 'Consider downloading Beta 5.');
+        document.getElementById('fileSize').textContent = 'Size: 92.7 MB';
+        setTimeout(() => showToast('Beta 4 - May not have new features.', 'Consider downloading Beta 5.'), 5000);
+    }
+    if (version === 'beta5') {
+        document.getElementById('fileSize').textContent = 'Size: 92.3 MB';
+        setTimeout(() => showToast('Beta 5 - May not have new features.', 'Consider downloading Beta 6.'), 5000);
+    }
+    if (version === 'beta6') {
+        document.getElementById('fileSize').textContent = 'Size: 97 MB';
     }
     selectedBeta = version;
     document.querySelectorAll('.beta-version-card').forEach(c => c.classList.remove('active'));
     event.currentTarget.classList.add('active');
-    const names = { beta4:'Beta 4', beta5:'Beta 5' };
+    const names = { beta4:'Beta 4', beta5:'Beta 5', beta6: 'Beta 6' };
     document.getElementById('selectedVersion').textContent = names[version] || version;
 }
 
 function startDownload() {
     const urls = {
         beta4: 'https://drive.google.com/file/d/1EWc3IU3zlIrNCTp6qI6oVw02hy-rnvR9/view?usp=drive_link',
-        beta5: 'https://drive.google.com/file/d/1JQn5l6xSKfO5croysU9JCjwtIVWdoShq/view?usp=drive_link'
+        beta5: 'https://drive.google.com/file/d/1JQn5l6xSKfO5croysU9JCjwtIVWdoShq/view?usp=drive_link',
+        beta6: 'https://drive.google.com/file/d/1e7vb4PHwqyv1mVIQqmb5l_tE0cv_54ji/view?usp=drive_link'
     };
-    const versionNames = { beta4:'Beta 4', beta5:'Beta 5' };
+    const versionNames = { beta4:'Beta 4', beta5:'Beta 5', beta6:'Beta 6' };
 
     if (!urls[selectedBeta]) {
         setTimeout(() => showToast('Version Unavailable', 'This version is not available. Please select a different version.'), 8000);
