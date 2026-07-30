@@ -130,9 +130,9 @@ function selectPlatform(platform) {
 }
 
 
-setTimeout(() => showToast('Beta 6 now available', 'Beta 6 is now available for download. Click the download button to get the latest update.'), 5000);
+setTimeout(() => showToast('Beta 6.1 now available', 'Click the download button to get the latest beta 6.1.'), 5000);
 
-let fileSize = '97';
+let fileSize = '98.1';
 document.getElementById('fileSize').textContent = 'Size: '+fileSize + ' MB';
 
 function selectBeta(version) {
@@ -146,15 +146,15 @@ function selectBeta(version) {
     }
     if (version === 'beta5') {
         document.getElementById('fileSize').textContent = 'Size: 92.3 MB';
-        setTimeout(() => showToast('Beta 5 - May not have new features.', 'Consider downloading Beta 6.'), 5000);
+        setTimeout(() => showToast('Beta 5 - May not have new features.', 'Consider downloading Beta 6.1.'), 5000);
     }
-    if (version === 'beta6') {
-        document.getElementById('fileSize').textContent = 'Size: 97 MB';
+    if (version === 'beta6_1') {
+        document.getElementById('fileSize').textContent = 'Size: 98.1 MB';
     }
     selectedBeta = version;
     document.querySelectorAll('.beta-version-card').forEach(c => c.classList.remove('active'));
     event.currentTarget.classList.add('active');
-    const names = { beta4:'Beta 4', beta5:'Beta 5', beta6: 'Beta 6' };
+    const names = { beta4:'Beta 4', beta5:'Beta 5', beta6_1: 'Beta 6.1' };
     document.getElementById('selectedVersion').textContent = names[version] || version;
 }
 
@@ -162,9 +162,9 @@ function startDownload() {
     const urls = {
         beta4: 'https://drive.google.com/file/d/1EWc3IU3zlIrNCTp6qI6oVw02hy-rnvR9/view?usp=drive_link',
         beta5: 'https://drive.google.com/file/d/1JQn5l6xSKfO5croysU9JCjwtIVWdoShq/view?usp=drive_link',
-        beta6: 'https://drive.google.com/file/d/1e7vb4PHwqyv1mVIQqmb5l_tE0cv_54ji/view?usp=drive_link'
+        beta6_1: 'https://drive.google.com/file/d/1uNN5fNRzcpdRQb-dzIcPygjxSHV0oB07/view?usp=drive_link'
     };
-    const versionNames = { beta4:'Beta 4', beta5:'Beta 5', beta6:'Beta 6' };
+    const versionNames = { beta4:'Beta 4', beta5:'Beta 5', beta6_1:'Beta 6.1' };
 
     if (!urls[selectedBeta]) {
         setTimeout(() => showToast('Version Unavailable', 'This version is not available. Please select a different version.'), 8000);
