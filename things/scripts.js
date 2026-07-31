@@ -72,7 +72,7 @@ function updateNavScrollStyle() {
 })();
 
 // ===== MODAL MANAGEMENT =====
-let selectedBeta = 'beta5';
+let selectedBeta = 'beta6_1';
 let selectedPlatform = 'android';
 
 window.addEventListener('load', () => {
@@ -130,59 +130,105 @@ function selectPlatform(platform) {
 }
 
 
-setTimeout(() => showToast('Beta 6.1 now available', 'Click the download button to get the latest beta 6.1.'), 5000);
+// ===== BETA VERSIONS (loaded from things/betas.json) =====
+let betasData = [];
+let betasById = {};
 
-let fileSize = '98.1';
-document.getElementById('fileSize').textContent = 'Size: '+fileSize + ' MB';
+async function loadBetas() {
+    const listEl = document.getElementById('betaVersionsList');
+    try {
+        const res = await fetch('things/betas.json', { cache: 'no-store' });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        betasData = data.betas || data || [];
+        betasById = {};
+        betasData.forEach(b => { betasById[b.id] = b; });
 
-function selectBeta(version) {
-    if (['beta1','beta2','beta3'].includes(version)) {
-        showToast('Unavailable','This beta version is no longer available.');
+        renderBetaList();
+
+        const latest = betasData.find(b => b.latest) || betasData[betasData.length - 1];
+        if (latest) {
+            selectedBeta = latest.id;
+            applyBetaSelection(latest.id, false);
+            setTimeout(() => showToast(latest.name + ' now available', 'Click the download button to get the latest ' + latest.name + '.'), 5000);
+        }
+    } catch (err) {
+        console.error('Failed to load beta versions:', err);
+        if (listEl) listEl.innerHTML = '<p class="text-xs text-red-400 px-1">Unable to load beta versions. Please refresh the page.</p>';
+    }
+}
+
+function betaCardHTML(beta) {
+    const isLatest = !!beta.latest;
+    const badgeBg = isLatest ? 'bg-purple-700' : 'bg-gray-700';
+    const hoverBorder = beta.available ? (isLatest ? 'hover:border-purple-500/40' : 'hover:border-gray-500/40') : '';
+    const activeClass = isLatest ? ' active' : '';
+    const unavailableClass = beta.available ? '' : ' unavailable';
+    const displayName = beta.name + (isLatest ? ': Latest' : '');
+    return (
+        '<div class="beta-version-card' + activeClass + unavailableClass + ' rounded-3xl p-4 cursor-pointer ' + hoverBorder + '" data-beta-id="' + beta.id + '" onclick="selectBeta(\'' + beta.id + '\')">' +
+            '<div class="flex items-center justify-between"><div class="flex items-center gap-3">' +
+                '<div class="w-10 h-10 rounded-full ' + badgeBg + ' flex items-center justify-center text-xs font-bold text-white">' + beta.number + '</div>' +
+                '<div><h4 class="font-bold text-sm">' + displayName + '</h4><p class="text-xs text-gray-400">' + beta.description + '</p></div>' +
+            '</div>' +
+            '<span class="px-2.5 py-1 ' + badgeBg + ' text-white text-xs rounded-full whitespace-nowrap">' + beta.date + '</span>' +
+            '</div>' +
+        '</div>'
+    );
+}
+
+function renderBetaList() {
+    const listEl = document.getElementById('betaVersionsList');
+    if (!listEl) return;
+    if (!betasData.length) {
+        listEl.innerHTML = '<p class="text-xs text-gray-500 px-1">No beta versions available right now.</p>';
         return;
     }
-    if (version === 'beta4') {
-        document.getElementById('fileSize').textContent = 'Size: 92.7 MB';
-        setTimeout(() => showToast('Beta 4 - May not have new features.', 'Consider downloading Beta 5.'), 5000);
+    listEl.innerHTML = betasData.map(betaCardHTML).join('');
+}
+
+function applyBetaSelection(id, playToast) {
+    const beta = betasById[id];
+    if (!beta) return;
+    document.getElementById('fileSize').textContent = 'Size: ' + beta.fileSizeMB + ' MB';
+    document.getElementById('selectedVersion').textContent = beta.name;
+    document.querySelectorAll('.beta-version-card').forEach(c => c.classList.remove('active'));
+    const card = document.querySelector('.beta-version-card[data-beta-id="' + id + '"]');
+    if (card) card.classList.add('active');
+    if (playToast && beta.toast) {
+        setTimeout(() => showToast(beta.toast.title, beta.toast.message), 5000);
     }
-    if (version === 'beta5') {
-        document.getElementById('fileSize').textContent = 'Size: 92.3 MB';
-        setTimeout(() => showToast('Beta 5 - May not have new features.', 'Consider downloading Beta 6.1.'), 5000);
-    }
-    if (version === 'beta6_1') {
-        document.getElementById('fileSize').textContent = 'Size: 98.1 MB';
+}
+
+function selectBeta(version) {
+    const beta = betasById[version];
+    if (!beta || !beta.available) {
+        showToast('Unavailable', 'This beta version is no longer available.');
+        return;
     }
     selectedBeta = version;
-    document.querySelectorAll('.beta-version-card').forEach(c => c.classList.remove('active'));
-    event.currentTarget.classList.add('active');
-    const names = { beta4:'Beta 4', beta5:'Beta 5', beta6_1: 'Beta 6.1' };
-    document.getElementById('selectedVersion').textContent = names[version] || version;
+    applyBetaSelection(version, true);
 }
 
 function startDownload() {
-    const urls = {
-        beta4: 'https://drive.google.com/file/d/1EWc3IU3zlIrNCTp6qI6oVw02hy-rnvR9/view?usp=drive_link',
-        beta5: 'https://drive.google.com/file/d/1JQn5l6xSKfO5croysU9JCjwtIVWdoShq/view?usp=drive_link',
-        beta6_1: 'https://drive.google.com/file/d/1uNN5fNRzcpdRQb-dzIcPygjxSHV0oB07/view?usp=drive_link'
-    };
-    const versionNames = { beta4:'Beta 4', beta5:'Beta 5', beta6_1:'Beta 6.1' };
-
-    if (!urls[selectedBeta]) {
+    const beta = betasById[selectedBeta];
+    if (!beta || !beta.available || !beta.downloadUrl) {
         setTimeout(() => showToast('Version Unavailable', 'This version is not available. Please select a different version.'), 8000);
         return;
     }
 
-    const url  = urls[selectedBeta];
-    const name = versionNames[selectedBeta];
     const a = document.createElement('a');
-    a.href = url;
-    a.download = 'GhanaTrotroTransit-' + name.replace(/\s+/g,'-') + '.apk';
+    a.href = beta.downloadUrl;
+    a.download = 'GhanaTrotroTransit-' + beta.name.replace(/\s+/g, '-') + '.apk';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    showToast('Download Started', 'GhanaTrotroTransit ' + name + ' is downloading. Redirecting to routes page...');
-    setTimeout(() => window.open('https://gtt.nxnx.tech/routes-you-can-find','_blank'), 5000);
+    showToast('Download Started', 'GhanaTrotroTransit ' + beta.name + ' is downloading. Redirecting to routes page...');
+    setTimeout(() => window.open('https://gtt.nxnx.tech/routes-you-can-find', '_blank'), 5000);
     closeDownloadModal();
 }
+
+loadBetas();
 
 // ===== NAVBAR =====
 window.addEventListener('scroll', () => {

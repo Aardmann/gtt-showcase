@@ -1,0 +1,58 @@
+{
+  "betas": [
+    {
+      "id": "beta4",
+      "number": "4",
+      "name": "Beta 4",
+      "description": "UI/UX improvements · Bug fixes",
+      "date": "21/05/26",
+      "fileSizeMB": 92.7,
+      "downloadUrl": "",
+      "available": false,
+      "latest": false,
+      "toast": {
+        "title": "Beta 4 - May not have new features.",
+        "message": "Consider downloading Beta 5."
+      }
+    },
+    {
+      "id": "beta5",
+      "number": "5",
+      "name": "Beta 5",
+      "description": "UI/UX · Security updates· Bug fixes",
+      "date": "12/07/26",
+      "fileSizeMB": 92.3,
+      "downloadUrl": "",
+      "available": false,
+      "latest": false,
+      "toast": {
+        "title": "Beta 5 - May not have new features.",
+        "message": "Consider downloading Beta 6.1."
+      }
+    },
+    {
+      "id": "beta6_1",
+      "number": "6",
+      "name": "Beta 6.1",
+      "description": "UI/UX · Security updates· Waakye",
+      "date": "30/07/26",
+      "fileSizeMB": 98.1,
+      "downloadUrl": "https://drive.google.com/file/d/1uNN5fNRzcpdRQb-dzIcPygjxSHV0oB07/view?usp=drive_link",
+      "available": true,
+      "latest": false,
+      "toast": null
+    },
+    {
+      "id": "beta6_1_1",
+      "number": "6",
+      "name": "Beta 6.1.1",
+      "description": "Bug fixes · Security updates",
+      "date": "31/07/26",
+      "fileSizeMB": 98.1,
+      "downloadUrl": "https://drive.google.com/file/d/1SaMlr3fQpSiNO7tFmPMag4BrDoHLlJa2/view?usp=drive_link",
+      "available": true,
+      "latest": true,
+      "toast": null
+    }
+  ]
+}
