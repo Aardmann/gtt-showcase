@@ -1096,9 +1096,19 @@ async function fetchRoutes() {
   if (supabaseClient) { 
     try {
       // Construct Base Query
+      // route_stops(...) is embedded so we can pull the first/last stop
+      // names for the View link's from/to params (see viewRouteDetails) -
+      // matching the ?id=&from=&to= scheme the main app's own share
+      // feature (handleShareRoute) uses.
       let query = supabaseClient
         .from('routes')
-        .select('*', {count: 'exact'})
+        .select(`
+          *,
+          route_stops(
+            stop_order,
+            stops(name)
+          )
+        `, {count: 'exact'})
         .eq('approved', true)
         .order('total_fare');
 
@@ -1176,6 +1186,15 @@ async function fetchRoutes() {
         const vType = route.vehicle_type ? route.vehicle_type.toLowerCase() : 'trotro';
         const displayFare = route.total_fare ? `GHS ${parseFloat(route.total_fare).toFixed(2)}` : 'GHS 0.00';
 
+        // First/last stop along the route (by stop_order) - these are the
+        // actual from/to names the main app's deep link expects, which
+        // isn't necessarily the same text as the route's display name.
+        const sortedStops = (route.route_stops || [])
+          .slice()
+          .sort((a, b) => a.stop_order - b.stop_order);
+        const fromName = sortedStops[0]?.stops?.name || '';
+        const toName = sortedStops[sortedStops.length - 1]?.stops?.name || '';
+
         const row = document.createElement('tr');
         row.innerHTML = `
           <td>${globalIndex}</td>
@@ -1193,7 +1212,7 @@ async function fetchRoutes() {
           <td><strong>${displayFare}</strong></td>
           <td>
             <div class="route-actions">
-              <button class="action-btn" title="View Details" onclick="viewRouteDetails('${route.name}', '${vType}', '${displayFare}', '${route.description || 'No additional details provided.'}')">
+              <button class="action-btn" title="View Details" onclick="viewRouteDetails('${route.id || ''}', '${route.name}', '${vType}', '${displayFare}', '${route.description || 'No additional details provided.'}', '${fromName}', '${toName}')">
                 <i class="fas fa-eye"></i>
               </button>
               <!--<button class="action-btn" title="Bookmark" onclick="triggerAlert('${route.name}')">
@@ -1291,7 +1310,26 @@ async function fetchRoutes() {
     }
 
     // Action execution helpers
-    function viewRouteDetails(name, type, fare, description) {
+    function viewRouteDetails(routeId, name, type, fare, description, fromName, toName) {
+      if (routeId) {
+        // Same ?id=&from=&to= scheme as the main app's own "Share route"
+        // link (see handleShareRoute in HomeScreen.js): "id" pins it to
+        // this exact route, "from"/"to" ride along as a fallback search
+        // if that route id is ever removed later. The main app's
+        // deep-link useEffect fetches this route, puts it on the map as
+        // the selected route, and opens the route-details bottom sheet
+        // automatically on load.
+        const params = new URLSearchParams();
+        params.set('id', routeId);
+        if (fromName) params.set('from', fromName);
+        if (toName) params.set('to', toName);
+
+        window.open(`https://gtt-web.nxnx.tech/?${params.toString()}`, '_blank', 'noopener,noreferrer');
+        return;
+      }
+
+      // No id to link to (e.g. offline fallback sample data) - fall back
+      // to a plain summary instead of navigating to a broken deep link.
       alert(`Route Details:\n\nName: ${name}\nVector Type: ${type.toUpperCase()}\nBase Fare: ${fare}\nNotes: ${description}\n\nDownload our mobile app or visit the web app to access live tracking & updates.`);
     }
 
