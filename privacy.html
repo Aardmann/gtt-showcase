@@ -10,9 +10,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./things/styles.css">
   <style>
-    .privacy-container { max-width: 800px; margin: 40px auto 100px; padding: 40px; border-radius: 1.5rem; line-height: 1.7; }
+    .privacy-container { max-width: 800px; margin: 40px auto 100px; padding: 40px 20px; border-radius: 1.5rem; line-height: 1.7; }
     .privacy-container h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem; }
-    .privacy-container h2 { font-size: 1.75rem; font-weight: 600; margin-top: 2.5rem; margin-bottom: 1rem; border-bottom: 1px solid var(--clr-border); padding-bottom: 0.5rem; }
+    .privacy-container h2 { font-size: 1.75rem; font-weight: 600; margin-top: 2.5rem; margin-bottom: 1rem; border-bottom: 1px solid var(--clr-border); padding-bottom: 0.5rem; scroll-margin-top: 24px; }
     .privacy-container h3 { font-size: 1.35rem; font-weight: 600; margin-top: 1.75rem; margin-bottom: 0.75rem; }
     .privacy-container h4 { font-size: 1.1rem; font-weight: 600; margin-top: 1.25rem; margin-bottom: 0.5rem; }
     .privacy-container p { color: var(--clr-text-secondary); margin-bottom: 1rem; }
@@ -26,13 +26,29 @@
     .back-link:hover { color: var(--clr-text-primary); background: var(--clr-surface); transform: translateX(-4px); }
     .back-link svg { width: 18px; height: 18px; transition: transform 0.2s ease-in-out; }
     .link-color { color: #fff; }
+
+    /* --- Summary + navigation additions --- */
+    .summary-box { border: 1px solid var(--clr-border); background: var(--clr-card-bg); border-radius: 1rem; padding: 24px 28px; margin-bottom: 2rem; }
+    .summary-box h2 { margin-top: 0; border-bottom: none; padding-bottom: 0; font-size: 1.2rem; }
+    .summary-box ul { margin-bottom: 0; padding-left: 0; list-style: none; }
+    .summary-box li { position: relative; padding-left: 1.6rem; margin-bottom: 0.6rem; }
+    .summary-box li::before { content: "✓"; position: absolute; left: 0; color: var(--clr-text-primary); opacity: 0.6; }
+    .summary-box .disclaimer { margin-top: 1rem; margin-bottom: 0; font-size: 0.85rem; opacity: 0.75; }
+
+    .toc { border: 1px solid var(--clr-border); border-radius: 1rem; padding: 20px 28px; margin-bottom: 2.5rem; }
+    .toc p { margin-bottom: 0.75rem; font-weight: 600; color: var(--clr-text-primary); }
+    .toc ol { columns: 2; column-gap: 2rem; padding-left: 1.2rem; margin-bottom: 0; }
+    .toc li { color: var(--clr-text-secondary); margin-bottom: 0.4rem; break-inside: avoid; }
+    .toc a { color: var(--clr-text-secondary); text-decoration: none; }
+    .toc a:hover { color: var(--clr-text-primary); text-decoration: underline; }
+    @media (max-width: 600px) { .toc ol { columns: 1; } }
   </style>
 </head>
 <body>
 
 <header class="gradient-hero hero-banner slide-up">
   <h1 class="brand-font">Privacy Policy</h1>
-  <p class="last-updated">Last updated: July 10, 2026</p>
+  <p class="last-updated">Last updated: September 4, 2026</p>
 </header>
 
 <div class="back-btn-container slide-up">
@@ -48,15 +64,54 @@
 <main class="privacy-container glass-panel slide-up delay-100">
   <p>This Privacy Policy explains how Ghana Trotro Transit ("GTT", "we", "us", "our") collects, uses, and protects information when you use our Android app, web app, and website (together, the "Service"). By using the Service, you agree to the practices described here.</p>
 
-  <h2>1. Who We Are</h2>
-  <p>Ghana Trotro Transit is built and operated by NxNx Tech, CC416 Adjei Kwashi Street, Accra, Ghana. GTT is an independently developed transit-information tool and is not affiliated with, endorsed by, or operated by GPRTU, any government agency, or any trotro operator.</p>
+  <div class="summary-box">
+    <h2>Quick Summary</h2>
+    <ul>
+      <li>Signing in is optional the core route search, navigation, and offline maps all work without an account.</li>
+      <li>If you do create an account, we only ask for your name and email address.</li>
+      <li>Location access is optional, used only to power the map, and is never sold.</li>
+      <li>We do not sell your personal information to anyone, ever.</li>
+      <li>You can access, correct, or delete your data including your whole account at any time.</li>
+    </ul>
+    <p class="disclaimer">This summary is for convenience only. The full policy below is what governs.</p>
+  </div>
 
-  <h2>2. Information We Collect</h2>
+  <nav class="toc" aria-label="Table of contents">
+    <p>Contents</p>
+    <ol>
+      <li><a href="#who-we-are">Who We Are</a></li>
+      <li><a href="#information-we-collect">Information We Collect</a></li>
+      <li><a href="#how-we-use">How We Use Information</a></li>
+      <li><a href="#legal-basis">Legal Basis for Processing</a></li>
+      <li><a href="#fare-data">Fare and Route Data Sources</a></li>
+      <li><a href="#how-we-share">How We Share Information</a></li>
+      <li><a href="#international-transfers">International Data Storage &amp; Transfers</a></li>
+      <li><a href="#permissions">Mobile App Permissions</a></li>
+      <li><a href="#cookies">Cookies &amp; Similar Technologies</a></li>
+      <li><a href="#retention">Data Retention</a></li>
+      <li><a href="#security">Data Security</a></li>
+      <li><a href="#childrens-privacy">Children's Privacy</a></li>
+      <li><a href="#your-rights">Your Privacy Rights and Choices</a></li>
+      <li><a href="#account-deletion">Account Management &amp; Deletion</a></li>
+      <li><a href="#do-not-sell">Do Not Sell or Share My Information</a></li>
+      <li><a href="#automated-decisions">Automated Decision-Making</a></li>
+      <li><a href="#third-party-links">Third-Party Links</a></li>
+      <li><a href="#changes">Changes to This Policy</a></li>
+      <li><a href="#governing-law">Governing Law</a></li>
+      <li><a href="#contact">Contact Us</a></li>
+    </ol>
+  </nav>
+
+  <h2 id="who-we-are">1. Who We Are</h2>
+  <p>Ghana Trotro Transit is built and operated by NxNx Tech, CC416 Adjei Kwashi Street, Accra, Ghana. GTT is an independently developed transit-information tool and is not affiliated with, endorsed by, or operated by GPRTU, any government agency, or any trotro operator. NxNx Tech is the data controller responsible for the personal information described in this Policy.</p>
+
+  <h2 id="information-we-collect">2. Information We Collect</h2>
 
   <h3>2.1 Information You Provide</h3>
   <ul>
     <li><strong>Feedback and bug reports:</strong> When you use the feedback form, you may provide your name, a message, and a feedback category (bug report, feature request, route correction, compliment, or general feedback). Submitting feedback opens WhatsApp and sends your message, along with your WhatsApp phone number, directly to our support line.</li>
-    <li><strong>Custom or saved routes:</strong> If you create, save, or share a custom route, we store the route details (origin, destination, stops) you enter.</li>
+    <li><strong>Account registration (optional):</strong> You never need an account to search routes, view fares, or use offline maps signing in is entirely optional. If you choose to create an account, we collect only your <strong>name</strong> and <strong>email address</strong> to set up, secure, and identify your account. Where we offer sign-in through a third-party identity provider, we receive only the basic profile information that provider shares with us (typically your name and email) to authenticate you we do not receive your third-party password, and we do not access your third-party account beyond that basic profile information.</li>
+    <li><strong>Custom or saved routes:</strong> If you create, save, or share a custom route, we store the route details (origin, destination, stops) you enter. If you're signed in, these are linked to your account and synced so they're available across your devices; if you're not signed in, they stay stored locally on your device only.</li>
   </ul>
 
   <h3>2.2 Location Data</h3>
@@ -69,70 +124,103 @@
     <li>App version (e.g. Beta 4)</li>
     <li>General usage data such as routes searched, screens viewed, and crash/error logs</li>
     <li>IP address and network-level information when using the web app</li>
+    <li>A device or session identifier used to keep the app working consistently, and where you have an account to associate that device with your account</li>
   </ul>
 
   <h3>2.4 Offline and Local Storage</h3>
   <p>To support offline navigation, the app caches route maps, saved routes, and favourites locally on your device in sandboxed app storage. This cached data stays on your device and is used to let you view routes without a data connection.</p>
 
-  <h2>3. How We Use Information</h2>
+  <h2 id="how-we-use">3. How We Use Information</h2>
   <ul>
     <li>To find and display trotro routes, stops, and fare estimates</li>
     <li>To provide real-time guidance, stop notifications, and offline route access</li>
-    <li>To sync your saved routes and favourites across devices where you use the same account/session</li>
+    <li>To create and authenticate your optional account, and keep your saved routes and favourites in sync across devices when you're signed in</li>
     <li>To respond to feedback, bug reports, and route corrections</li>
     <li>To improve route accuracy using aggregated, community-contributed route data</li>
-    <li>To maintain app stability and diagnose technical issues</li>
+    <li>To maintain app stability, prevent abuse, and diagnose technical issues</li>
   </ul>
 
-  <h2>4. Fare and Route Data Sources</h2>
+  <h2 id="legal-basis">4. Legal Basis for Processing</h2>
+  <p>Where required by applicable data protection law, we rely on the following bases to process your personal information:</p>
+  <ul>
+    <li><strong>Consent</strong> for example, when you enable location access, choose to create an account, or submit feedback.</li>
+    <li><strong>Performance of a contract</strong> to provide features you've asked for, such as syncing saved routes once you register.</li>
+    <li><strong>Legitimate interests</strong> to secure, maintain, and improve the Service, prevent misuse, and understand aggregate usage, provided these interests are not overridden by your rights and interests.</li>
+    <li><strong>Legal obligation</strong> where processing is necessary to comply with Ghanaian law or another applicable legal requirement.</li>
+  </ul>
+  <p>Users in Ghana are additionally protected by the Data Protection Act, 2012 (Act 843), and we aim to follow the data protection principles set out by Ghana's Data Protection Commission.</p>
+
+  <h2 id="fare-data">5. Fare and Route Data Sources</h2>
   <p>Fare estimates referenced as "GPRTU-approved" are based on publicly available fare information and are provided for guidance only. Actual fares, routes, and schedules may vary due to traffic, road conditions, fuel prices, or individual driver/operator decisions, and are not guaranteed to be accurate at the time of your trip.</p>
 
-  <h2>5. How We Share Information</h2>
+  <h2 id="how-we-share">6. How We Share Information</h2>
   <p>We do not sell your personal information. We may share limited information in the following circumstances:</p>
   <ul>
     <li><strong>Feedback via WhatsApp:</strong> messages sent through our feedback form are transmitted via WhatsApp/Meta's messaging infrastructure and are subject to WhatsApp's own privacy practices.</li>
+    <li><strong>Backend and infrastructure providers:</strong> we use third-party infrastructure providers including our database and backend platform, Supabase to securely store account information, saved routes, and route/location data. These providers process data only on our behalf and under contractual restrictions.</li>
     <li><strong>Service providers:</strong> hosting, analytics, or crash-reporting providers that help us operate the Service, bound to use data only for that purpose.</li>
     <li><strong>Legal requirements:</strong> where required to comply with Ghanaian law, respond to lawful requests, or protect the rights, safety, or property of GTT or its users.</li>
+    <li><strong>Business transfers:</strong> if NxNx Tech is ever involved in a merger, acquisition, or sale of assets, your information may be transferred as part of that transaction; we'll notify you of any such change and any resulting choices you may have.</li>
   </ul>
 
-  <h2>6. Mobile App Permissions</h2>
+  <h2 id="international-transfers">7. International Data Storage &amp; Transfers</h2>
+  <p>Our infrastructure providers may store and process information on servers located outside Ghana. Where this happens, we take reasonable steps including contractual safeguards with our providers to keep your information protected to a standard consistent with this Privacy Policy, regardless of where it is processed.</p>
+
+  <h2 id="permissions">8. Mobile App Permissions</h2>
   <ul>
     <li><strong>Location (optional):</strong> used only for route search, nearby stations, and live navigation, and only after you grant permission via your device settings.</li>
     <li><strong>Push notifications:</strong> used for stop alerts, route updates, and service announcements. You can disable these at any time in your device settings.</li>
     <li><strong>Local storage:</strong> used to cache maps and routes for offline use, kept in an encrypted, sandboxed app folder inaccessible to other apps.</li>
-    <li><strong>Internet connection:</strong> required to fetch live route and fare data; the app falls back to cached offline data when unavailable.</li>
+    <li><strong>Internet connection:</strong> required to fetch live route and fare data, sign in, and sync your account; the app falls back to cached offline data when unavailable.</li>
   </ul>
   <p>You can review or revoke any of these permissions at any time through your device's operating system privacy settings.</p>
 
-  <h2>7. Cookies (Web App)</h2>
-  <p>The web version of GTT may use cookies or similar local storage technologies to remember your preferences and saved routes within your browser. You can clear or block cookies through your browser settings, though this may limit some features.</p>
+  <h2 id="cookies">9. Cookies &amp; Similar Technologies (Web App)</h2>
+  <p>The web version of GTT may use cookies or similar local storage technologies to remember your preferences, keep you signed in, and store saved routes within your browser. You can clear or block cookies through your browser settings, though this may sign you out or limit some features.</p>
 
-  <h2>8. Data Retention</h2>
-  <p>We retain feedback and usage data only as long as necessary to operate and improve the Service, respond to your requests, and comply with legal obligations. Locally cached offline data remains on your device until you clear the app's storage or uninstall the app.</p>
+  <h2 id="retention">10. Data Retention</h2>
+  <p>We retain feedback and usage data only as long as necessary to operate and improve the Service, respond to your requests, and comply with legal obligations. If you have an account, we retain your name, email address, and account-linked data for as long as your account stays active; see Section 14 for what happens when you delete it. Locally cached offline data remains on your device until you clear the app's storage or uninstall the app.</p>
 
-  <h2>9. Data Security</h2>
-  <p>We take reasonable technical and organizational measures to protect information from unauthorized access, alteration, disclosure, or destruction. However, no method of transmission or storage is completely secure, and we cannot guarantee absolute security.</p>
+  <h2 id="security">11. Data Security</h2>
+  <p>We take reasonable technical and organizational measures including encrypted local storage and access-controlled backend infrastructure to protect information from unauthorized access, alteration, disclosure, or destruction. However, no method of transmission or storage is completely secure, and we cannot guarantee absolute security.</p>
 
-  <h2>10. Children's Privacy</h2>
-  <p>The Service is not directed at children under 13, and we do not knowingly collect personal information from children under 13. If you believe a child has provided us with personal information, please contact us so we can remove it.</p>
+  <h2 id="childrens-privacy">12. Children's Privacy</h2>
+  <p>The Service is not directed at children under 13, and we do not knowingly collect personal information including account registrations from children under 13. If you believe a child has created an account or otherwise provided us with personal information, please contact us so we can delete it and, where applicable, deactivate the account.</p>
 
-  <h2>11. Your Rights and Choices</h2>
+  <h2 id="your-rights">13. Your Privacy Rights and Choices</h2>
+  <p>Depending on your location, you may have some or all of the following rights over your personal information:</p>
   <ul>
-    <li>You may decline location, notification, or storage permissions at any time via your device settings.</li>
-    <li>You may request access to, correction of, or deletion of personal information you have provided to us (e.g. feedback submissions) by contacting us at the details below.</li>
-    <li>You may stop using the Service and uninstall the app at any time, which removes locally cached data from your device.</li>
+    <li><strong>Access</strong> request a copy of the personal information we hold about you.</li>
+    <li><strong>Correction</strong> ask us to correct inaccurate or incomplete information, such as your account name or email.</li>
+    <li><strong>Deletion</strong> request deletion of your account and associated personal information (see Section 14).</li>
+    <li><strong>Portability</strong> request your data in a portable format, where technically feasible.</li>
+    <li><strong>Objection or restriction</strong> object to, or ask us to restrict, certain processing, such as location use.</li>
+    <li><strong>Withdraw consent</strong> withdraw previously given consent (for example, by disabling location or notification permissions) at any time, without affecting processing that already took place.</li>
   </ul>
+  <p>You can also decline location, notification, or storage permissions at any time via your device settings, and you can stop using the Service and uninstall the app at any time, which removes locally cached data from your device. To exercise any of these rights, contact us using the details in Section 20 we may need to verify your identity first.</p>
 
-  <h2>12. Third-Party Links</h2>
+  <h2 id="account-deletion">14. Account Management &amp; Deletion</h2>
+  <p>If you've created an account, you can request its deletion at any time either through an in-app account deletion option, where available, or by emailing us at the address in Section 20. Once we've verified your request, we will delete your name, email address, and account-linked saved routes within a reasonable period, except where we're legally required to keep certain records. Deleting your account does not automatically remove information you've separately shared with third parties (for example, a feedback message sent via WhatsApp) or data cached locally on your device, which you can clear by uninstalling the app.</p>
+
+  <h2 id="do-not-sell">15. Do Not Sell or Share My Information</h2>
+  <p>We do not sell your personal information, and we do not share it with third parties for their own advertising purposes. If this ever changes, we will update this Privacy Policy in advance and, where required by law, provide a way to opt out.</p>
+
+  <h2 id="automated-decisions">16. Automated Decision-Making</h2>
+  <p>We don't use your personal information to make decisions that have a legal or similarly significant effect on you through fully automated means. Route and fare suggestions are informational only and aren't a form of automated decision-making about you as an individual.</p>
+
+  <h2 id="third-party-links">17. Third-Party Links</h2>
   <p>The Service may link to third-party sites (such as our web app, social media, or app stores). We are not responsible for the privacy practices of those third-party sites, and we encourage you to review their policies separately.</p>
 
-  <h2>13. Changes to This Policy</h2>
-  <p>We may update this Privacy Policy from time to time. Changes will be posted on this page with a revised "Last updated" date. Continued use of the Service after changes take effect constitutes acceptance of the updated policy.</p>
+  <h2 id="changes">18. Changes to This Policy</h2>
+  <p>We may update this Privacy Policy from time to time. Changes will be posted on this page with a revised "Last updated" date, and where changes are material, we'll make reasonable efforts to bring them to your attention (for example, via an in-app notice). Continued use of the Service after changes take effect constitutes acceptance of the updated policy.</p>
 
-  <h2>14. Contact Us</h2>
-  <p>If you have questions about this Privacy Policy or how your data is handled, please contact us:</p>
+  <h2 id="governing-law">19. Governing Law</h2>
+  <p>This Privacy Policy is governed by the laws of the Republic of Ghana. Any dispute arising out of this Policy or your use of the Service is subject to the exclusive jurisdiction of the courts of Ghana, unless applicable law requires otherwise.</p>
+
+  <h2 id="contact">20. Contact Us</h2>
+  <p>If you have questions about this Privacy Policy, how your data is handled, or want to exercise any of the rights described above, please contact us:</p>
   <ul>
-    <li><strong>Email:</strong> <a class="link-color" href="mailto:info@nxnx.tech">info@nxnx.tech</a></li>
+    <li><strong>Email:</strong> <a class="link-color" href="mailto:info@nxnx.tech">info@nxnx.tech</a> (add "Privacy Request" to the subject line for data requests so we can respond promptly)</li>
     <li><strong>WhatsApp:</strong> <a class="link-color" href="https://wa.me/233209156811" target="_blank" rel="external nofollow noopener">+233 20 915 6811</a></li>
     <li><strong>Address:</strong> CC416 Adjei Kwashi Street, Accra, Ghana</li>
   </ul>
