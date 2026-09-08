@@ -51,6 +51,18 @@
       "fileSizeMB": 98.1,
       "downloadUrl": "https://drive.google.com/file/d/1SaMlr3fQpSiNO7tFmPMag4BrDoHLlJa2/view?usp=drive_link",
       "available": true,
+      "latest": false,
+      "toast": null
+    },
+    {
+      "id": "beta6_3_4",
+      "number": "6.3.4    ",
+      "name": "Beta 6.3.4",
+      "description": "Performance improvements · Bug fixes · Security updates",
+      "date": "08/09/26",
+      "fileSizeMB": 98.1,
+      "downloadUrl": "https://drive.google.com/file/d/1KVqAEa_Ity61k3_AgIM-ZC8VZUKxh9UZ/view?usp=sharing",
+      "available": true,
       "latest": true,
       "toast": null
     }
