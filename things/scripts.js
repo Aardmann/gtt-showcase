@@ -72,7 +72,7 @@ function updateNavScrollStyle() {
 })();
 
 // ===== MODAL MANAGEMENT =====
-let selectedBeta = 'beta6_3_4';
+let selectedBeta = 'teta1';
 let selectedPlatform = 'android';
 
 window.addEventListener('load', () => {
@@ -146,10 +146,13 @@ async function loadBetas() {
 
         renderBetaList();
 
-        const latest = betasData.find(b => b.latest) || betasData[betasData.length - 1];
-        if (latest) {
-            selectedBeta = latest.id;
-            applyBetaSelection(latest.id, false);
+        const latest = betasData.find(b => b.latest);
+        const downloadable = betasData.find(b => b.latest && b.available) || betasData.find(b => b.available);
+        if (downloadable) {
+            selectedBeta = downloadable.id;
+            applyBetaSelection(downloadable.id, false);
+        }
+        if (latest && latest.available) {
             setTimeout(() => showToast(latest.name + ' now available', 'Click the download button to get the latest ' + latest.name + '.'), 5000);
         }
     } catch (err) {
@@ -162,18 +165,18 @@ function betaCardHTML(beta) {
     const isLatest = !!beta.latest;
     const badgeBg = isLatest ? 'bg-purple-700' : 'bg-gray-700';
     const hoverBorder = beta.available ? (isLatest ? 'hover:border-purple-500/40' : 'hover:border-gray-500/40') : '';
-    const activeClass = isLatest ? ' active' : '';
+    const activeClass = selectedBeta === beta.id ? ' active' : '';
     const unavailableClass = beta.available ? '' : ' unavailable';
-    const displayName = beta.name + (isLatest ? ': Latest' : '');
+    const availability = beta.available ? 'Download ready' : 'Download link unavailable';
     return (
-        '<div class="beta-version-card' + activeClass + unavailableClass + ' rounded-3xl p-4 cursor-pointer ' + hoverBorder + '" data-beta-id="' + beta.id + '" onclick="selectBeta(\'' + beta.id + '\')">' +
+        '<button type="button" class="beta-version-card' + activeClass + unavailableClass + ' rounded-3xl p-4 text-left w-full ' + hoverBorder + '" data-beta-id="' + beta.id + '" aria-pressed="' + (selectedBeta === beta.id) + '"' + (beta.available ? ' onclick="selectBeta(\'' + beta.id + '\')"' : ' disabled') + '>' +
             '<div class="flex items-center justify-between"><div class="flex items-center gap-3">' +
                 '<div class="w-10 h-10 rounded-full ' + badgeBg + ' flex items-center justify-center text-xs font-bold text-white">' + beta.number + '</div>' +
-                '<div><h4 class="font-bold text-sm">' + displayName + '</h4><p class="text-xs text-gray-400">' + beta.description + '</p></div>' +
+                '<div><h4 class="font-bold text-sm">' + beta.name + (isLatest ? ' <span class="beta-latest-label">Latest</span>' : '') + '</h4><p class="text-xs text-gray-400">' + beta.description + '</p><p class="beta-status text-xs">' + availability + '</p></div>' +
             '</div>' +
             '<span class="px-2.5 py-1 ' + badgeBg + ' text-white text-xs rounded-full whitespace-nowrap">' + beta.date + '</span>' +
             '</div>' +
-        '</div>'
+        '</button>'
     );
 }
 
@@ -190,11 +193,13 @@ function renderBetaList() {
 function applyBetaSelection(id, playToast) {
     const beta = betasById[id];
     if (!beta) return;
-    document.getElementById('fileSize').textContent = 'Size: ' + beta.fileSizeMB + ' MB';
+    document.getElementById('fileSize').textContent = beta.fileSizeMB ? 'Size: ' + beta.fileSizeMB + ' MB' : '';
     document.getElementById('selectedVersion').textContent = beta.name;
-    document.querySelectorAll('.beta-version-card').forEach(c => c.classList.remove('active'));
-    const card = document.querySelector('.beta-version-card[data-beta-id="' + id + '"]');
-    if (card) card.classList.add('active');
+    document.querySelectorAll('.beta-version-card').forEach(card => {
+        const isSelected = card.dataset.betaId === id;
+        card.classList.toggle('active', isSelected);
+        card.setAttribute('aria-pressed', String(isSelected));
+    });
     if (playToast && beta.toast) {
         setTimeout(() => showToast(beta.toast.title, beta.toast.message), 5000);
     }
@@ -210,12 +215,44 @@ function selectBeta(version) {
     applyBetaSelection(version, true);
 }
 
+// ===== DOWNLOAD -> TELEGRAM (via Supabase edge function) =====
+// Fill these in. If things/supabase.js already defines your project URL and
+// anon key, reuse those instead of repeating them here.
+const TELEGRAM_NOTIFY_URL = 'https://vtmdateqrrrkqbpeedrx.supabase.co/functions/v1/notify-telegram';
+const TELEGRAM_NOTIFY_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ0bWRhdGVxcnJya3FicGVlZHJ4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEyNjAwMTAsImV4cCI6MjA3NjgzNjAxMH0.5ydzJnACZrldXIMf3LAOJVsmb6BFEers1nJTv_QorrU';
+
+function notifyDownload(beta) {
+    console.log('[GTT] notifyDownload called for', beta.name);
+    try {
+        fetch(TELEGRAM_NOTIFY_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + TELEGRAM_NOTIFY_KEY,
+                'apikey': TELEGRAM_NOTIFY_KEY
+            },
+            body: JSON.stringify({
+                event: 'apk_download',
+                platform: 'android',
+                version: beta.name,
+                page: window.location.href
+            }),
+            keepalive: true // lets the request finish even as the download starts
+        }).then(async (res) => {
+            if (!res.ok) console.error('[GTT] notify failed:', res.status, await res.text());
+            else console.log('[GTT] notify sent');
+        }).catch((err) => console.error('[GTT] notify error:', err)); // never blocks the download
+    } catch (e) { console.error('[GTT] notify exception:', e); }
+}
+
 function startDownload() {
     const beta = betasById[selectedBeta];
     if (!beta || !beta.available || !beta.downloadUrl) {
         setTimeout(() => showToast('Version Unavailable', 'This version is not available. Please select a different version.'), 8000);
         return;
     }
+
+    notifyDownload(beta);
 
     const a = document.createElement('a');
     a.href = beta.downloadUrl;

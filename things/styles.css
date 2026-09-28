@@ -157,11 +157,19 @@ body {
 .beta-version-card {
     background: var(--clr-card-bg);
     border: 1px solid var(--clr-border);
-    transition: all 0.3s ease;
+    transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
 }
-.beta-version-card:hover { transform:translateX(6px); border-color:rgba(124,58,237,0.5); }
+.beta-version-card:not(:disabled):hover { transform:translateX(3px); border-color:rgba(124,58,237,0.5); }
+.beta-version-card:focus-visible { outline:2px solid #a78bfa; outline-offset:2px; }
 .beta-version-card.active { border-color:#9333ea; background: #9233ea14; }
-.beta-version-card.unavailable { opacity:0.45; filter:grayscale(0.8); }
+.beta-version-card.unavailable { opacity:0.72; cursor:not-allowed; }
+.beta-latest-label { color:#c4b5fd; font-size:0.7rem; margin-left:0.25rem; }
+.beta-status { color:#86efac; margin-top:0.25rem; }
+.beta-version-card.unavailable .beta-status { color:#fcd34d; }
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { scroll-behavior:auto !important; animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; }
+}
 
 /* ===== PERMISSION BADGE ===== */
 .permission-badge {
