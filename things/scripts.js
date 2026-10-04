@@ -72,7 +72,7 @@ function updateNavScrollStyle() {
 })();
 
 // ===== MODAL MANAGEMENT =====
-let selectedBeta = 'teta1';
+let selectedBeta = 'theta1';
 let selectedPlatform = 'android';
 
 window.addEventListener('load', () => {
